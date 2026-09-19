@@ -1,6 +1,6 @@
 ## NOTICE
 
-This repository *doesn't* contain the public FTC SDK for the BIOBUZZ (2026-2027) competition season. Instead, it contains the code for Team Jellyfish 4654's robot for the FTC BIOBUZZ challenge!!
+This repository *doesn't* contain the public FTC SDK for the BIOBUZZ (2026-2027) competition season. Instead, it contains the code for Team Jellyfish 4654's robot for the FTC BIOBUZZ challenge!
 
 ## Welcome!
 This GitHub repository contains the source code that is used to build an Android app to control a *FIRST* Tech Challenge competition robot.  To use this SDK, download/clone the entire project to your local computer.
