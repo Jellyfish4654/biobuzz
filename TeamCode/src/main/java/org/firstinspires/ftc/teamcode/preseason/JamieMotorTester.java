@@ -5,22 +5,27 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 public class JamieMotorTester extends LinearOpMode {
-    private TouchSensor touchSensor;
     private static final double POWER = 0.3;
 
     public void runOpMode() {
         DcMotor motor = hardwareMap.get(DcMotor.class, "test_motor");
+        TouchSensor touchSensor = hardwareMap.get(TouchSensor.class,"test_sensor");
         waitForStart();
 
         boolean currentTouchState;
         boolean prevTouchState = false;
+        boolean status = false;
 
-        while (opModeIsActive()){
+        while (opModeIsActive()) {
             currentTouchState = touchSensor.isPressed();
+
             if (currentTouchState && !prevTouchState) {
-                motor.setPower(POWER);
-            } else if (!currentTouchState && prevTouchState ){
-                motor.setPower(0);
+                status = !status;
+                if (status) {
+                    motor.setPower(POWER);
+                } else {
+                    motor.setPower(0);
+                }
             }
             prevTouchState = currentTouchState;
         }
