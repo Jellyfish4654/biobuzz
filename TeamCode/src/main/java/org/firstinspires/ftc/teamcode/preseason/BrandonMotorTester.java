@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(name = "Sensor: REV touch sensor", group = "Sensor")
-@Disabled
+
+@Utility (name = "Brandon Motor Tester", description = "Toggles the power of \"motor\" when \"touchSensor\" is touched.")
 public class BrandonMotorTester extends LinearOpMode {
     TouchSensor touchSensor;  // Touch sensor Object
     DcMotor motor; // Motor Object
