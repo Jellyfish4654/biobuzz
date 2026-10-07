@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.preseason;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Utility;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 
-@Utility (name = "Brandon Motor Tester", description = "Toggles the power of \"motor\" when \"touchSensor\" is touched.")
+@Utility(name = "Brandon Motor Tester", description = "Toggles the power of \"motor\" when \"touchSensor\" is touched.")
 public class BrandonMotorTester extends LinearOpMode {
     TouchSensor touchSensor;  // Touch sensor Object
     DcMotor motor; // Motor Object

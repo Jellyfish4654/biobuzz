@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Utility;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
-@Utility (name = "Jamie Motor Tester", description = "Toggles the power of \"test_motor\" when \"test_sensor\" is touched.")
+@Utility(name = "Jamie Motor Tester", description = "Toggles the power of \"test_motor\" when \"test_sensor\" is touched.")
 public class JamieMotorTester extends LinearOpMode {
     private static final double POWER = 0.3;
 
