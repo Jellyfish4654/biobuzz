@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 public abstract class BaseOpMode extends OpMode {
 //    protected Follower drivetrain; // Pedro!
-//    protected Controls controls;
+    protected ControlMap controls;
     
     private long prevLoopNanoTime = 0;
     private boolean alertedEndgame = false;
@@ -23,7 +23,7 @@ public abstract class BaseOpMode extends OpMode {
         }
         
 //        telemetry = new JoinedTelemetry(telemetry, PanelsTelemetry.INSTANCE.getFtcTelemetry());
-//        controls = new Controls(gamepad1, gamepad2);
+        controls = new ControlMap(gamepad1, gamepad2);
     }
     
     @Override
@@ -68,7 +68,7 @@ public abstract class BaseOpMode extends OpMode {
         telemetry.addData("\tRuntime", (int) getRuntime());
         if (getRuntime() >= 110 && !alertedEndgame) {
             alertedEndgame = true;
-//            controls.megaRumble();
+            controls.megaRumble();
         }
     }
 }
