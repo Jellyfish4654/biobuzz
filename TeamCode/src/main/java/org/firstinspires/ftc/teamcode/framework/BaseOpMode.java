@@ -13,6 +13,7 @@ public abstract class BaseOpMode extends OpMode {
     private boolean alertedEndgame = false;
     
     // TODO: make sure nothing moves during auto → teleop transition
+    // TODO: this gets overridden for auto, calling super
     @Override
     public void init() {
         // Bulk caching for hubs will hopefully improve performance!
@@ -34,11 +35,13 @@ public abstract class BaseOpMode extends OpMode {
         timingTelemetry();
     }
     
+    // TODO: this gets overridden for auto, calling super, to schedule the routine
     @Override
     public void start() {
         resetRuntime();
     }
     
+    // TODO: this gets overridden for all teleop and auto, calling super
     @Override
     public void loop() {
         timingTelemetry();
