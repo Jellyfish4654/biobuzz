@@ -8,14 +8,11 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 @Utility(name = "Brandon Motor Tester", description = "Toggles the power of \"motor\" when \"touchSensor\" is touched.")
 public class BrandonMotorTester extends LinearOpMode {
-    TouchSensor touchSensor;  // Touch sensor Object
     DcMotor motor; // Motor Object
-    private static final double power = 0.3;
+    private static final double power = 1;
 
     @Override
     public void runOpMode() {
-
-        touchSensor = hardwareMap.get(TouchSensor.class, "touchSensor");
         motor = hardwareMap.get(DcMotor.class, "motor");
 
         boolean toggle = false;
@@ -28,9 +25,8 @@ public class BrandonMotorTester extends LinearOpMode {
         // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
         while (opModeIsActive()) {
 
-            if (touchSensor.isPressed()) {
+            if (gamepad1.a) {
                 // send the info back to driver station using telemetry function.
-                telemetry.addData("Touch Sensor", "Is Pressed");
                 if (!lastPressed) {
                     if (!toggle) {
                         motor.setPower(power);
@@ -43,7 +39,6 @@ public class BrandonMotorTester extends LinearOpMode {
                 }
                 lastPressed = true;
             } else {
-                telemetry.addData("Touch Sensor", "Is Not Pressed");
                 lastPressed = false;
             }
 

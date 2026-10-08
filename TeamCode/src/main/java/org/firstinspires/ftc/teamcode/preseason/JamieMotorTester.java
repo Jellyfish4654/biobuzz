@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 @Utility(name = "Jamie Motor Tester", description = "Toggles the power of \"test_motor\" when \"test_sensor\" is touched.")
 public class JamieMotorTester extends LinearOpMode {
-    private static final double POWER = 0.3;
+    private static final double POWER = 1;
 
     public void runOpMode() {
         DcMotor motor = hardwareMap.get(DcMotor.class, "test_motor");
