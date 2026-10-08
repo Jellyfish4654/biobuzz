@@ -11,7 +11,6 @@ public class JamieMotorTester extends LinearOpMode {
 
     public void runOpMode() {
         DcMotor motor = hardwareMap.get(DcMotor.class, "test_motor");
-        TouchSensor touchSensor = hardwareMap.get(TouchSensor.class,"test_sensor");
         waitForStart();
 
         boolean currentTouchState;
@@ -19,7 +18,7 @@ public class JamieMotorTester extends LinearOpMode {
         boolean status = false;
 
         while (opModeIsActive()) {
-            currentTouchState = touchSensor.isPressed();
+            currentTouchState = gamepad1.a; 
 
             if (currentTouchState && !prevTouchState) {
                 status = !status;
