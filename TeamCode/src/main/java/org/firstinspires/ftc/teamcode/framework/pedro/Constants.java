@@ -19,27 +19,35 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import java.util.OptionalDouble;
 
 public class Constants {
-
-    public static MecanumConfig drivetrainConfig = new MecanumConfig(c -> {
-        c.frontLeftName.set("drive_fl");
-        c.frontRightName.set("drive_fr");
-        c.backLeftName.set("drive_bl");
-        c.backRightName.set("drive_br");
-        c.frontLeftDirection.set(DcMotorSimple.Direction.REVERSE);
-        c.frontRightDirection.set(DcMotorSimple.Direction.FORWARD);
-        c.backLeftDirection.set(DcMotorSimple.Direction.REVERSE);
-        c.backRightDirection.set(DcMotorSimple.Direction.FORWARD);
-    });
-
     public static PinpointConfig localizerConfig = new PinpointConfig(c -> {
         c.name.set("pinpoint");
-        c.ticksPerUnit.set(OptionalDouble.of(337.909515460958)); // good TODO: maybe revert to SWINGARM constant
-        c.xPodOffset.set(-0.25); // inches, found with tape measure
-        c.yPodOffset.set(-4.00625); // inches found with tape measure
+        c.podType.set(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
+        c.globalDistanceUnit.set(DistanceUnit.INCH);
+        c.resetMode.set(PinpointLocalizer.ResetMode.RECALIBRATE_IMU); // pose will be reset with Follower.setPose()
+        
+        c.offsetUnits.set(DistanceUnit.INCH);
+        c.xPodOffset.set(-0.25); // found with tape measure (X (forward) pod's distance left from the center of rotation)
+        c.yPodOffset.set(-4.00625); // found with tape measure (Y (Strafe) pod's distance forward from the center of rotation)
+        
         c.xPodDirection.set(GoBildaPinpointDriver.EncoderDirection.REVERSED);
         c.yPodDirection.set(GoBildaPinpointDriver.EncoderDirection.REVERSED);
-        c.globalDistanceUnit.set(DistanceUnit.INCH);
-        c.offsetUnits.set(DistanceUnit.INCH);
+
+//        c.encoderResolutionUnit.set(DistanceUnit.INCH);
+//        c.ticksPerUnit.set(OptionalDouble.of(337.909515460958)); // found with AutoTune
+    });
+    
+    public static MecanumConfig drivetrainConfig = new MecanumConfig(c -> {
+        c.frontLeftName.set("drive_fl");
+        c.frontLeftDirection.set(DcMotorSimple.Direction.REVERSE);
+        
+        c.frontRightName.set("drive_fr");
+        c.frontRightDirection.set(DcMotorSimple.Direction.FORWARD);
+        
+        c.backLeftName.set("drive_bl");
+        c.backLeftDirection.set(DcMotorSimple.Direction.REVERSE);
+        
+        c.backRightName.set("drive_br");
+        c.backRightDirection.set(DcMotorSimple.Direction.FORWARD);
     });
 
     public static ForesightConfig foresightConfig = new ForesightConfig(c -> {
@@ -64,15 +72,13 @@ public class Constants {
         c.maxAchievableStrafeVelocity.set(51.716255745232864);
         c.naturalForwardDeceleration.set(52.5850227348);
         c.naturalStrafeDeceleration.set(66.32634096182964);
-        }
-    );
+    });
 
-    public static Follower create(HardwareMap hardwareMap) {
+    public static Follower createFollower(HardwareMap hardwareMap) {
         return new Follower(
                 new PinpointLocalizer(hardwareMap, localizerConfig),
                 new Mecanum(hardwareMap, drivetrainConfig),
                 new Foresight(foresightConfig)
         );
     }
-
 }
