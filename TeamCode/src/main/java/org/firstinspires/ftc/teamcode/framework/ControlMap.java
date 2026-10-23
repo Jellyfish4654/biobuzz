@@ -21,7 +21,7 @@ public class ControlMap {
     public double driveFwd() {
         return applyDeadband(gamepad1.left_stick_x + gamepad2.left_stick_x) * precisionMulti();
     }
-    public double driveLat() {
+    public double driveStr() {
         return applyDeadband(-(gamepad1.left_stick_y + gamepad2.left_stick_y)) * precisionMulti();
     }
     public double driveTrn() {
@@ -32,8 +32,8 @@ public class ControlMap {
     }
     
     public void rumble(int durationMs){
-        this.gamepad1.rumble(durationMs);
-        this.gamepad2.rumble(durationMs);
+        gamepad1.rumble(durationMs);
+        gamepad2.rumble(durationMs);
     }
     public void megaRumble() {
         Gamepad.RumbleEffect megaEffect = new Gamepad.RumbleEffect.Builder()

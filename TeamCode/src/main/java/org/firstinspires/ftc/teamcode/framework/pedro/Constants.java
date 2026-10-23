@@ -48,6 +48,9 @@ public class Constants {
         
         c.backRightName.set("drive_br");
         c.backRightDirection.set(DcMotorSimple.Direction.FORWARD);
+        
+        c.manualBrakeMode.set(false); // sent directly to motor ZeroPowerBehavior (coast for smoother movement)
+        c.powerThreshold.set(0.0); // our deadband makes this unnecessary
     });
 
     public static ForesightConfig foresightConfig = new ForesightConfig(c -> {
