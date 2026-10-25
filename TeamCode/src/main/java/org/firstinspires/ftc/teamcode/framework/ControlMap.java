@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.framework;
 
-//import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-//@Configurable
+@Configurable
 public class ControlMap {
     // TODO: strafe adjustment factor?
+    // TODO: something that adds panels gamepad data to gamepads
     public static double DEADBAND = 0.02; // sticks and triggers
     public static double PRECISION_MULTIPLIER_COARSE = 0.35;
     public static double PRECISION_MULTIPLIER_FINE = 0.2;

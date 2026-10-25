@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.drivetrain.DrivePowers;
 import com.pedropathing.follower.ManualDrive;
 
 import org.firstinspires.ftc.teamcode.framework.BaseOpMode;
 import org.firstinspires.ftc.teamcode.framework.Storage;
 
+@Configurable
 public class JellyTele extends BaseOpMode {
     public static double MAX_HOLD_VELOCITY = 0.2;
     

@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.framework;
 
-//import com.bylazar.telemetry.JoinedTelemetry;
-//import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.JoinedTelemetry;
+import com.bylazar.telemetry.PanelsTelemetry;
 import com.pedropathing.follower.Follower;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -22,7 +22,8 @@ public abstract class BaseOpMode extends OpMode {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
         
-//        telemetry = new JoinedTelemetry(telemetry, PanelsTelemetry.INSTANCE.getFtcTelemetry());
+        // TODO: telemetry works?
+        telemetry = new JoinedTelemetry(telemetry, PanelsTelemetry.INSTANCE.getFtcTelemetry());
         
         follower = Constants.createFollower(hardwareMap);
         
