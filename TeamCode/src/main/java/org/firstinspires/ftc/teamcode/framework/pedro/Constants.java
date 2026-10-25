@@ -16,8 +16,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-import java.util.OptionalDouble;
-
 public class Constants {
     public static PinpointConfig localizerConfig = new PinpointConfig(c -> {
         c.name.set("pinpoint");
@@ -25,9 +23,15 @@ public class Constants {
         c.globalDistanceUnit.set(DistanceUnit.INCH);
         c.resetMode.set(PinpointLocalizer.ResetMode.RECALIBRATE_IMU); // pose will be reset with Follower.setPose()
         
+        // CAD 10/23
+//        c.offsetUnits.set(DistanceUnit.MM);
+//        c.xPodOffset.set(4.0); // X (forward) pod's distance left from the center of rotation
+//        c.yPodOffset.set(-90.3); // Y (Strafe) pod's distance forward from the center of rotation
+        
+        // Spring 2026 Team Fish bot
         c.offsetUnits.set(DistanceUnit.INCH);
-        c.xPodOffset.set(-0.25); // found with tape measure (X (forward) pod's distance left from the center of rotation)
-        c.yPodOffset.set(-4.00625); // found with tape measure (Y (Strafe) pod's distance forward from the center of rotation)
+        c.xPodOffset.set(-0.25); // found with tape measure
+        c.yPodOffset.set(-4.00625); // found with tape measure
         
         c.xPodDirection.set(GoBildaPinpointDriver.EncoderDirection.REVERSED);
         c.yPodDirection.set(GoBildaPinpointDriver.EncoderDirection.REVERSED);
