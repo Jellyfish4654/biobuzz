@@ -12,11 +12,8 @@ public abstract class BaseOpMode extends OpMode {
     protected Follower follower;
     protected ControlMap controls;
     
-    private long prevLoopNanoTime = 0;
-    private boolean alertedEndgame = false;
-    
     // TODO: make sure nothing moves during auto → teleop transition
-    // TODO: this gets overridden for auto, calling super
+    // TODO: appended in children
     @Override
     public void init() {
         // Bulk caching for hubs will hopefully improve performance!
@@ -41,13 +38,13 @@ public abstract class BaseOpMode extends OpMode {
         timingTelemetry();
     }
     
-    // TODO: this gets overridden for auto, calling super, to schedule the routine
+    // TODO: appended in children
     @Override
     public void start() {
         resetRuntime();
     }
     
-    // TODO: this gets overridden for all teleop and auto, calling super
+    // TODO: prepended in children
     @Override
     public void loop() {
         follower.update();
@@ -81,11 +78,13 @@ public abstract class BaseOpMode extends OpMode {
         Storage.poseBackup = follower.pose();
     }
     
+    private long prevLoopNanoTime = 0;
+    private boolean alertedEndgame = false;
     protected void timingTelemetry() {
         // loop speed
         long currentNanoTime = System.nanoTime();
         long nanoPerLoop = currentNanoTime - prevLoopNanoTime;
-        double hz = (nanoPerLoop > 0) ? 1e9 / nanoPerLoop : 0;
+        double hz = (nanoPerLoop > 0L) ? 1e9 / nanoPerLoop : 0;
         prevLoopNanoTime = currentNanoTime;
         
         telemetry.addLine("\nLoop Timing:");
@@ -93,7 +92,7 @@ public abstract class BaseOpMode extends OpMode {
         telemetry.addData("\tHz", "%.2f", hz);
         
         // runtime and alerts
-        telemetry.addData("\tRuntime", (int) getRuntime());
+        telemetry.addData("Runtime", "%.2f", getRuntime());
         if (getRuntime() >= 110 && !alertedEndgame) {
             alertedEndgame = true;
             controls.megaRumble();
