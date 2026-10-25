@@ -2,11 +2,14 @@ package org.firstinspires.ftc.teamcode.framework;
 
 //import com.bylazar.telemetry.JoinedTelemetry;
 //import com.bylazar.telemetry.PanelsTelemetry;
+import com.pedropathing.follower.Follower;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.framework.pedro.Constants;
+
 public abstract class BaseOpMode extends OpMode {
-//    protected Follower drivetrain; // Pedro!
+    protected Follower follower;
     protected ControlMap controls;
     
     private long prevLoopNanoTime = 0;
@@ -23,6 +26,9 @@ public abstract class BaseOpMode extends OpMode {
         }
         
 //        telemetry = new JoinedTelemetry(telemetry, PanelsTelemetry.INSTANCE.getFtcTelemetry());
+        
+        follower = Constants.createFollower(hardwareMap);
+        
         controls = new ControlMap(gamepad1, gamepad2);
     }
     
@@ -44,13 +50,35 @@ public abstract class BaseOpMode extends OpMode {
     // TODO: this gets overridden for all teleop and auto, calling super
     @Override
     public void loop() {
+        follower.update();
+        Storage.poseBackup = follower.pose();
+        
+        // TODO: determine how much of this is useful
+        telemetry.addLine("\nFollower:");
+        telemetry.addData("\tPose X", "%.2f", follower.pose().x());
+        telemetry.addData("\tPose Y", "%.2f", follower.pose().x());
+        telemetry.addData("\tPose H", "%.2f", follower.pose().heading());
+        telemetry.addLine("\t" + follower.velocity());
+        telemetry.addLine("\t" + follower.twist());
+        
+        telemetry.addData("\tMode", follower.mode());
+        if (follower.isBusy()) {
+            telemetry.addData("\tTarget Pose", follower.poseAt(1));
+            if (follower.following()) {
+                telemetry.addData("\tPath Index", follower.pathIndex());
+                telemetry.addData("\tPath Completion", "%.4f", follower.completion());
+            }
+        }
+        
         timingTelemetry();
         // Manual bulk caching would go here
     }
     
     @Override
     public void stop() {
-        // Add any shutdown or hardware stopping procedures here
+        follower.stop();
+        follower.update();
+        Storage.poseBackup = follower.pose();
     }
     
     protected void timingTelemetry() {

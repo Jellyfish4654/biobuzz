@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.framework.Storage;
 public class ResetStorage extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        Storage.currentPose = Storage.DEFAULT_POSE;
+        Storage.poseBackup = Storage.DEFAULT_POSE;
         Storage.alliance = Storage.Alliance.UNKNOWN;
     }
 }

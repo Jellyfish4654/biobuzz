@@ -30,6 +30,9 @@ public class ControlMap {
     public boolean driveModePressed() {
         return gamepad1.psWasPressed() || gamepad2.psWasPressed();
     }
+    public boolean defensive() { // TODO: temp
+        return gamepad1.cross || gamepad2.cross;
+    }
     
     public void rumble(int durationMs){
         gamepad1.rumble(durationMs);
