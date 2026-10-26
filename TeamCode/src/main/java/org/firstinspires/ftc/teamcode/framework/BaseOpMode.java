@@ -13,7 +13,6 @@ public abstract class BaseOpMode extends OpMode {
     protected ControlMap controls;
     
     // TODO: make sure nothing moves during auto → teleop transition
-    // TODO: appended in children
     @Override
     public void init() {
         // Bulk caching for hubs will hopefully improve performance!
@@ -39,13 +38,11 @@ public abstract class BaseOpMode extends OpMode {
         timingTelemetry();
     }
     
-    // TODO: appended in children
     @Override
     public void start() {
         resetRuntime();
     }
     
-    // TODO: prepended in children
     @Override
     public void loop() {
         follower.update();
@@ -55,7 +52,7 @@ public abstract class BaseOpMode extends OpMode {
         telemetry.addLine("\nFollower:");
         telemetry.addData("\tPose X", "%.2f", follower.pose().x());
         telemetry.addData("\tPose Y", "%.2f", follower.pose().x());
-        telemetry.addData("\tPose H", "%.2f", follower.pose().heading());
+        telemetry.addData("\tPose H", "%.2f", Math.toDegrees(follower.pose().heading()));
         telemetry.addLine("\t" + follower.velocity());
         telemetry.addLine("\t" + follower.twist());
         
@@ -88,12 +85,12 @@ public abstract class BaseOpMode extends OpMode {
         double hz = (nanoPerLoop > 0L) ? 1e9 / nanoPerLoop : 0;
         prevLoopNanoTime = currentNanoTime;
         
-        telemetry.addLine("\nLoop Timing:");
-        telemetry.addData("\tMillis", "%.2f", nanoPerLoop / 1e6);
-        telemetry.addData("\tHz", "%.2f", hz);
+        telemetry.addLine("\nTiming:");
+        telemetry.addData("\tLoop Ms", "%.2f", nanoPerLoop / 1e6);
+        telemetry.addData("\tLoop Hz", "%.2f", hz);
         
         // runtime and alerts
-        telemetry.addData("Runtime", "%.2f", getRuntime());
+        telemetry.addData("\tRuntime", "%.2f", getRuntime());
         if (getRuntime() >= 110 && !alertedEndgame) {
             alertedEndgame = true;
             controls.megaRumble();

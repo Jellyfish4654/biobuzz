@@ -38,9 +38,17 @@ public class JellyTele extends BaseOpMode {
                 controls.driveStr(),
                 controls.driveTrn()
         );
+        
         if (fieldCentric) {
-             powers = ManualDrive.fieldCentric(powers, follower.pose().heading(), Storage.alliance.headingOffset);
+            powers = ManualDrive.fieldCentric(powers, follower.pose().heading(), Storage.alliance.headingOffset);
+            
+            telemetry.addLine("\nDrivetrain (Field Centric):");
+        } else {
+            telemetry.addLine("\nDrivetrain:");
         }
+        telemetry.addData("\tForward", "%.2f", controls.driveFwd());
+        telemetry.addData("\tStrafe", "%.2f", controls.driveStr());
+        telemetry.addData("\tTurn", "%.2f", controls.driveTrn());
         
         if (controls.defensive()) { // TODO: replace with if shooter active
             ManualDrive.driveOrHold(follower, powers, 0, MAX_HOLD_VELOCITY);
