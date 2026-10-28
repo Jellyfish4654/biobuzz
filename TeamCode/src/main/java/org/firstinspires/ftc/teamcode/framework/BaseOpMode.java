@@ -14,7 +14,7 @@ public abstract class BaseOpMode extends OpMode {
     
     // TODO: make sure nothing moves during auto → teleop transition
     @Override
-    public void init() {
+    public void init() { // runs before extended
         // Bulk caching for hubs will hopefully improve performance!
         // TODO: Try manual caching if needed for ultra performance
         for (LynxModule hub : hardwareMap.getAll(LynxModule.class)) {
@@ -39,12 +39,12 @@ public abstract class BaseOpMode extends OpMode {
     }
     
     @Override
-    public void start() {
+    public void start() { // runs before extended
         resetRuntime();
     }
     
     @Override
-    public void loop() {
+    public void loop() { // runs after extended
         follower.update();
         Storage.poseBackup = follower.pose();
         
@@ -70,7 +70,7 @@ public abstract class BaseOpMode extends OpMode {
     }
     
     @Override
-    public void stop() {
+    public void stop() { // runs before extended
         follower.stop();
         follower.update();
         Storage.poseBackup = follower.pose();

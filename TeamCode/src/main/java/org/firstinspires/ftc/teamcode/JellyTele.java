@@ -21,14 +21,14 @@ public class JellyTele extends BaseOpMode {
     
     @Override
     public void loop() {
-        updateDrive();
+        updateManualDrive();
         
         super.loop();
     }
     
     // ↓ -------------- ↓ -------------- ↓ DRIVETRAIN ↓ -------------- ↓ -------------- ↓
     private boolean fieldCentric = false;
-    private void updateDrive() {
+    private void updateManualDrive() {
         if (controls.driveModePressed()) {
             fieldCentric = !fieldCentric;
         }
@@ -41,11 +41,11 @@ public class JellyTele extends BaseOpMode {
         
         if (fieldCentric) {
             powers = ManualDrive.fieldCentric(powers, follower.pose().heading(), Storage.alliance.headingOffset);
-            
             telemetry.addLine("\nDrivetrain (Field Centric):");
         } else {
             telemetry.addLine("\nDrivetrain:");
         }
+        
         telemetry.addData("\tForward", "%.2f", controls.driveFwd());
         telemetry.addData("\tStrafe", "%.2f", controls.driveStr());
         telemetry.addData("\tTurn", "%.2f", controls.driveTrn());
