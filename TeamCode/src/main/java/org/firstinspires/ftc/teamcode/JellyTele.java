@@ -41,9 +41,9 @@ public class JellyTele extends BaseOpMode {
         
         if (fieldCentric) {
             powers = ManualDrive.fieldCentric(powers, follower.pose().heading(), Storage.alliance.headingOffset);
-            telemetry.addLine("\nDrivetrain (Field Centric):");
+            telemetry.addLine("\nManual Drive (Field Centric):");
         } else {
-            telemetry.addLine("\nDrivetrain:");
+            telemetry.addLine("\nManual Drive:");
         }
         
         telemetry.addData("\tForward", "%.2f", controls.driveFwd());

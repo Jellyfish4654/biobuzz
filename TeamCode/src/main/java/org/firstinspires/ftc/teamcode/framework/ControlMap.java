@@ -67,7 +67,7 @@ public class ControlMap {
     }
     
     // linear rescaled deadband: lowers inputs to start at 0 and scales up to reach 1
-    private double applyDeadband(double stick) {
+    private static double applyDeadband(double stick) {
         double absStick = Math.abs(stick);
         if (absStick > DEADBAND) {
             double scaledValue = (absStick - DEADBAND) / (1 - DEADBAND);
