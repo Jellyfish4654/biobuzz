@@ -1,25 +1,40 @@
 package org.firstinspires.ftc.teamcode.framework.hardware;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+@Configurable
 public class Transfer {
-
-    private final DcMotor transfer;
-    public static double POWER = 1;
-
-    public Transfer(DcMotor motor) {
-        this.transfer = motor;
+    public static double ON_POWER = 1;
+    private final DcMotor motor;
+    private double cachedPower = 0;
+    
+    public Transfer(DcMotor motor, DcMotor.Direction direction) {
+        this.motor = motor;
+        this.motor.setDirection(direction);
+        this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
-
+    
+    private void ensurePower(double desired) {
+        if (cachedPower != desired) {
+            cachedPower = desired;
+            motor.setPower(cachedPower);
+        }
+    }
+    
     public void on() {
-        transfer.setPower(POWER);
+        ensurePower(ON_POWER);
+    }
+    
+    public void reverse() {
+        ensurePower(-ON_POWER);
     }
 
     public void off() {
-        transfer.setPower(0);
+        ensurePower(0);
     }
 
     public boolean isOn() {
-        return transfer.getPower() != 0;
+        return cachedPower != 0;
     }
 }

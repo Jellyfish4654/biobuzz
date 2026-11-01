@@ -5,11 +5,16 @@ import com.bylazar.telemetry.PanelsTelemetry;
 import com.pedropathing.follower.Follower;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.framework.hardware.Intake;
+import org.firstinspires.ftc.teamcode.framework.hardware.Scorer;
+import org.firstinspires.ftc.teamcode.framework.hardware.Transfer;
 import org.firstinspires.ftc.teamcode.framework.pedro.Constants;
 
 public abstract class BaseOpMode extends OpMode {
     protected Follower follower;
+    protected Scorer scorer;
     protected ControlMap controls;
     
     // TODO: make sure nothing moves during auto → teleop transition
@@ -25,6 +30,11 @@ public abstract class BaseOpMode extends OpMode {
         telemetry = new JoinedTelemetry(telemetry, PanelsTelemetry.INSTANCE.getFtcTelemetry());
         
         follower = Constants.createFollower(hardwareMap);
+        
+        scorer = new Scorer(
+                new Intake(hardwareMap.get(DcMotor.class, "intake"), DcMotor.Direction.FORWARD),
+                new Transfer(hardwareMap.get(DcMotor.class, "transfer"), DcMotor.Direction.FORWARD)
+        );
         
         controls = new ControlMap(gamepad1, gamepad2);
     }
@@ -58,14 +68,16 @@ public abstract class BaseOpMode extends OpMode {
         
         telemetry.addData("\tMode", follower.mode());
         if (follower.isBusy()) {
-            telemetry.addData("\tTarget Pose", follower.poseAt(1));
+            telemetry.addData("\t\tTarget Pose", follower.poseAt(1));
             if (follower.following()) {
-                telemetry.addData("\tPath Index", follower.pathIndex());
-                telemetry.addData("\tPath Completion", "%.4f", follower.completion());
+                telemetry.addData("\t\tPath Index", follower.pathIndex());
+                telemetry.addData("\t\tPath Completion", "%.4f", follower.completion());
             }
         }
         
+        telemetry.addLine("\nUtility:");
         timingTelemetry();
+        telemetry.addData("\tAlliance", Storage.alliance);
         // Manual bulk caching would go here
     }
     
@@ -85,7 +97,6 @@ public abstract class BaseOpMode extends OpMode {
         double hz = (nanoPerLoop > 0L) ? 1e9 / nanoPerLoop : 0;
         prevLoopNanoTime = currentNanoTime;
         
-        telemetry.addLine("\nTiming:");
         telemetry.addData("\tLoop Ms", "%.2f", nanoPerLoop / 1e6);
         telemetry.addData("\tLoop Hz", "%.2f", hz);
         
