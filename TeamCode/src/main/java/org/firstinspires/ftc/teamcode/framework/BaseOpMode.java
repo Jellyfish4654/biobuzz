@@ -6,10 +6,12 @@ import com.pedropathing.follower.Follower;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.framework.hardware.Intake;
+import org.firstinspires.ftc.teamcode.framework.hardware.Roller;
 import org.firstinspires.ftc.teamcode.framework.hardware.Scorer;
-import org.firstinspires.ftc.teamcode.framework.hardware.Transfer;
+import org.firstinspires.ftc.teamcode.framework.hardware.Shooter;
 import org.firstinspires.ftc.teamcode.framework.pedro.Constants;
 
 public abstract class BaseOpMode extends OpMode {
@@ -32,8 +34,18 @@ public abstract class BaseOpMode extends OpMode {
         follower = Constants.createFollower(hardwareMap);
         
         scorer = new Scorer(
-                new Intake(hardwareMap.get(DcMotor.class, "intake"), DcMotor.Direction.FORWARD),
-                new Transfer(hardwareMap.get(DcMotor.class, "transfer"), DcMotor.Direction.FORWARD)
+                new Roller(hardwareMap.get(DcMotor.class, "intake"), DcMotor.Direction.FORWARD, 0),
+                new Roller(hardwareMap.get(DcMotor.class, "transfer"), DcMotor.Direction.FORWARD, 1),
+                new Shooter(
+                        hardwareMap.get(DcMotorEx.class, "pollen_motor"), DcMotorEx.Direction.FORWARD,
+                        hardwareMap.get(Servo.class, "pollen_hood"), Servo.Direction.FORWARD, 0, 1,
+                        0
+                ),
+                new Shooter(
+                        hardwareMap.get(DcMotorEx.class, "nectar_motor"), DcMotorEx.Direction.FORWARD,
+                        hardwareMap.get(Servo.class, "nectar_hood"), Servo.Direction.FORWARD, 0, 1,
+                        1
+                )
         );
         
         controls = new ControlMap(gamepad1, gamepad2);

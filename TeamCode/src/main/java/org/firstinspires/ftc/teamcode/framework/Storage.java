@@ -4,6 +4,7 @@ import com.pedropathing.math.Pose;
 
 public class Storage {
     public static final Pose DEFAULT_POSE = Pose.zero();
+    
     public static Pose poseBackup = DEFAULT_POSE;
     public static Alliance alliance = Alliance.UNKNOWN; // TODO: set in auto
     public static double balls = 0;

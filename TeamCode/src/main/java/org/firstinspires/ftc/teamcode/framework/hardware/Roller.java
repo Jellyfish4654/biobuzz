@@ -4,15 +4,21 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Configurable
-public class Intake {
-    public static double ON_POWER = 1;
+public class Roller {
+    public static double[] POWERS = {
+            1, // intake
+            1  // transfer
+    };
+    
     private final DcMotor motor;
+    private final int id;
     private double cachedPower = 0;
 
-    public Intake(DcMotor motor, DcMotor.Direction direction) {
+    public Roller(DcMotor motor, DcMotor.Direction direction, int id) {
         this.motor = motor;
         this.motor.setDirection(direction);
         this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.id = id;
     }
 
     private void ensurePower(double desired) {
@@ -23,11 +29,11 @@ public class Intake {
     }
 
     public void on() {
-        ensurePower(ON_POWER);
+        ensurePower(POWERS[id]);
     }
     
     public void reverse() {
-        ensurePower(-ON_POWER);
+        ensurePower(-POWERS[id]);
     }
 
     public void off() {
