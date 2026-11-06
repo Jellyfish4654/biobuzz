@@ -4,16 +4,29 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class FlowerRamp {
-    private final Servo servo = hardwareMap.get(Servo.class, "flower_ramp");
-    public static double UP = 0.0;
-    public static double DOWN = 1.0;
+    private final Servo servo;
+    public static double UP = 0;
+    public static double DOWN = 0;
+    public double currAngle = 0.0;
 
-    void up(){
-        servo.setPosition(UP);
+    public FlowerRamp(Servo servo) {
+        this.servo = servo;
     }
 
-    void down(){
-        servo.setPosition(DOWN);
+    public void setAngle(double desired){
+        if (currAngle != desired) {
+            currAngle = desired;
+            servo.setPosition(currAngle);
+        }
+    }
+
+    private void toggle() {
+        if (currAngle==UP) {
+            currAngle = DOWN;
+        } else {
+            currAngle = UP;
+        }
+        servo.setPosition(currAngle);
     }
 
 }
