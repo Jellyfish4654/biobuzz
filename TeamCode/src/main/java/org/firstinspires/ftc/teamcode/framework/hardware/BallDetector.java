@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.framework.hardware;
-import android.net.http.X509TrustManagerExtensions;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -11,7 +10,8 @@ public class BallDetector {
     private final DigitalChannel beamBreak;
     private boolean prevRaw = true;
     private long prevTime;
-    //final values for if the beam sensor is broken on this and last iteration
+    
+    // ↓ final values for if the beam sensor is broken on this and last iteration
     private boolean broken = false;
     private boolean prevBroken = false;
 
@@ -32,16 +32,16 @@ public class BallDetector {
         }
         prevRaw = beamBreak.getState();
     }
-
-    public boolean wasBlocked() {
-        return broken & !prevBroken;
-    }
-
-    public boolean wasUnblocked() {
-        return !broken & prevBroken;
-    }
-
-    public boolean isBroken() {
+    
+    public boolean isBlocked() {
         return broken;
+    }
+
+    public boolean justBlocked() {
+        return isBlocked() && !prevBroken;
+    }
+
+    public boolean justUnblocked() {
+        return !isBlocked() && prevBroken;
     }
 }

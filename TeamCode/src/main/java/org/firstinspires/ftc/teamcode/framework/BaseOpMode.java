@@ -7,8 +7,10 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.framework.hardware.BallDetector;
 import org.firstinspires.ftc.teamcode.framework.hardware.Roller;
 import org.firstinspires.ftc.teamcode.framework.hardware.Scorer;
 import org.firstinspires.ftc.teamcode.framework.hardware.Shooter;
@@ -35,6 +37,7 @@ public abstract class BaseOpMode extends OpMode {
         
         scorer = new Scorer(
                 new Roller(hardwareMap.get(DcMotor.class, "intake"), DcMotor.Direction.FORWARD, () -> Roller.INTAKE_POWER),
+                new BallDetector(hardwareMap.get(DigitalChannel.class, "intake_sensor")),
                 new Roller(hardwareMap.get(DcMotor.class, "transfer"), DcMotor.Direction.FORWARD, () -> Roller.TRANSFER_POWER),
                 new Shooter(
                         hardwareMap.get(DcMotorEx.class, "pollen_motor"), DcMotorEx.Direction.FORWARD,

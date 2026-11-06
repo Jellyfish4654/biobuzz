@@ -9,13 +9,15 @@ public class Scorer {
     public static long SHOOT_MS = 1000;
     
     private final Roller intake;
+    private final BallDetector intakeSensor;
     private final Roller transfer;
     private final Shooter shooterPollen, shooterNectar; // TODO: work on shooter, add flower ramp
     private Mode mode = Mode.IDLE;
     private long shootStartTime = 0L;
     
-    public Scorer(Roller intake, Roller transfer, Shooter shooterPollen, Shooter shooterNectar) {
+    public Scorer(Roller intake, BallDetector intakeSensor, Roller transfer, Shooter shooterPollen, Shooter shooterNectar) {
         this.intake = intake;
+        this.intakeSensor = intakeSensor;
         this.transfer = transfer;
         this.shooterPollen = shooterPollen;
         this.shooterNectar = shooterNectar;
@@ -84,7 +86,8 @@ public class Scorer {
     }
     
     private void trackIntake() {
-        if (/*intakeSensor.justUnblocked()*/ false) {
+        intakeSensor.update();
+        if (intakeSensor.justUnblocked()) {
             if (mode == Mode.INTAKE || mode == Mode.SHOOT) {
                 Storage.balls++;
             } else if (Storage.balls > 0) {
