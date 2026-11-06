@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 @Configurable
 public class BallDetector {
-    public static double DEBOUNCE_MS = 100;
+    public static double DEBOUNCE_MS = 100; //TODO: Tune debounce time
 
     private final DigitalChannel beamBreak;
     private boolean prevRaw = true;
