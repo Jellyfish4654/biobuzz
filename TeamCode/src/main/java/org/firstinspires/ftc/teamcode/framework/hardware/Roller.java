@@ -3,22 +3,22 @@ package org.firstinspires.ftc.teamcode.framework.hardware;
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import java.util.function.DoubleSupplier;
+
 @Configurable
 public class Roller {
-    public static double[] POWERS = {
-            1, // intake
-            1  // transfer
-    };
+    public static double INTAKE_POWER = 1;
+    public static double TRANSFER_POWER = 1;
     
     private final DcMotor motor;
-    private final int id;
+    private final DoubleSupplier powerSupplier;
     private double cachedPower = 0;
 
-    public Roller(DcMotor motor, DcMotor.Direction direction, int id) {
+    public Roller(DcMotor motor, DcMotor.Direction direction, DoubleSupplier powerSupplier) {
         this.motor = motor;
         this.motor.setDirection(direction);
         this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.id = id;
+        this.powerSupplier = powerSupplier;
     }
 
     private void ensurePower(double desired) {
@@ -29,11 +29,11 @@ public class Roller {
     }
 
     public void on() {
-        ensurePower(POWERS[id]);
+        ensurePower(powerSupplier.getAsDouble());
     }
     
     public void reverse() {
-        ensurePower(-POWERS[id]);
+        ensurePower(-powerSupplier.getAsDouble());
     }
 
     public void off() {

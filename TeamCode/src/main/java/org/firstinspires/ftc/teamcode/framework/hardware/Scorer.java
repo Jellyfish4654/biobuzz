@@ -10,7 +10,7 @@ public class Scorer {
     
     private final Roller intake;
     private final Roller transfer;
-    private final Shooter shooterPollen, shooterNectar; // TODO: implement shooter
+    private final Shooter shooterPollen, shooterNectar; // TODO: work on shooter, add flower ramp
     private Mode mode = Mode.IDLE;
     private long shootStartTime = 0L;
     

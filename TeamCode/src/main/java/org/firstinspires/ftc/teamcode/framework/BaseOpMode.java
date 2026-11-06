@@ -34,17 +34,15 @@ public abstract class BaseOpMode extends OpMode {
         follower = Constants.createFollower(hardwareMap);
         
         scorer = new Scorer(
-                new Roller(hardwareMap.get(DcMotor.class, "intake"), DcMotor.Direction.FORWARD, 0),
-                new Roller(hardwareMap.get(DcMotor.class, "transfer"), DcMotor.Direction.FORWARD, 1),
+                new Roller(hardwareMap.get(DcMotor.class, "intake"), DcMotor.Direction.FORWARD, () -> Roller.INTAKE_POWER),
+                new Roller(hardwareMap.get(DcMotor.class, "transfer"), DcMotor.Direction.FORWARD, () -> Roller.TRANSFER_POWER),
                 new Shooter(
                         hardwareMap.get(DcMotorEx.class, "pollen_motor"), DcMotorEx.Direction.FORWARD,
-                        hardwareMap.get(Servo.class, "pollen_hood"), Servo.Direction.FORWARD, 0, 1,
-                        0
+                        hardwareMap.get(Servo.class, "pollen_hood"), Servo.Direction.FORWARD, 0, 1
                 ),
                 new Shooter(
                         hardwareMap.get(DcMotorEx.class, "nectar_motor"), DcMotorEx.Direction.FORWARD,
-                        hardwareMap.get(Servo.class, "nectar_hood"), Servo.Direction.FORWARD, 0, 1,
-                        1
+                        hardwareMap.get(Servo.class, "nectar_hood"), Servo.Direction.FORWARD, 0, 1
                 )
         );
         

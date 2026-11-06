@@ -8,14 +8,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Shooter {
     private final DcMotorEx motor;
     private final Servo hood;
-    private final int id;
     private double cachedPower; // TODO: velocity?
     private double cachedAngle;
     
     public Shooter(
             DcMotorEx motor, DcMotorEx.Direction motorDirection,
-            Servo hood, Servo.Direction hoodDirection, double hoodMin, double hoodMax,
-            int id
+            Servo hood, Servo.Direction hoodDirection, double hoodMin, double hoodMax
     ) {
         this.motor = motor;
         this.motor.setDirection(motorDirection);
@@ -24,8 +22,6 @@ public class Shooter {
         this.hood = hood;
         this.hood.setDirection(hoodDirection);
         this.hood.scaleRange(hoodMin, hoodMax);
-        
-        this.id = id;
     }
     
     private void ensurePower(double desired) {
