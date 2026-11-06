@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.framework.hardware;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@Configurable
 public class FlowerRamp {
     private final Servo servo;
     public static double UP = 0;

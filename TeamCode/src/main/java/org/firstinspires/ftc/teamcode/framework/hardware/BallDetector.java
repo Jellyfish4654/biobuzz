@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 @Configurable
 public class BallDetector {
-    public static double DEBOUNCE_MS = 100; //TODO: Tune debounce time
+    public static double DEBOUNCE_MS = 10; //TODO: Tune debounce time
 
     private final DigitalChannel beamBreak;
     private boolean prevRaw = true;
@@ -38,10 +38,14 @@ public class BallDetector {
     }
 
     public boolean justBlocked() {
-        return isBlocked() && !prevBroken;
+        boolean ret = isBlocked() && !prevBroken;
+        prevBroken = isBlocked();
+        return ret;
     }
 
     public boolean justUnblocked() {
-        return !isBlocked() && prevBroken;
+        boolean ret =  !isBlocked() && prevBroken;
+        prevBroken  = isBlocked();
+        return ret;
     }
 }
