@@ -1,33 +1,39 @@
 package org.firstinspires.ftc.teamcode.framework.hardware;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Configurable
 public class FlowerRamp {
+    public static double UP_POS = 1;
+    public static double DOWN_POS = 0;
+    
     private final Servo servo;
-    public static double UP = 0;
-    public static double DOWN = 0;
-    public double currAngle = 0.0;
+    private double cachedAngle = 0;
 
     public FlowerRamp(Servo servo) {
         this.servo = servo;
+        up();
     }
 
-    public void setAngle(double desired){
-        if (currAngle != desired) {
-            currAngle = desired;
-            servo.setPosition(currAngle);
+    private void ensureAngle(double desired){
+        if (cachedAngle != desired) {
+            cachedAngle = desired;
+            servo.setPosition(cachedAngle);
         }
     }
-
-    private void toggle() {
-        if (currAngle==UP) {
-            currAngle = DOWN;
-        } else {
-            currAngle = UP;
-        }
-        servo.setPosition(currAngle);
+    
+    public void up() {
+        ensureAngle(UP_POS);
     }
-
+    
+    public void down() {
+        ensureAngle(UP_POS);
+    }
+    
+    // No toggle -- keep to scorer
+    
+    public boolean isDown() {
+        return cachedAngle == DOWN_POS;
+    }
 }

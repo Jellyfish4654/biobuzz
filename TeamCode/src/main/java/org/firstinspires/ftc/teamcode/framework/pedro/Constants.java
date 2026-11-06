@@ -54,6 +54,7 @@ public class Constants {
         c.backRightDirection.set(DcMotorSimple.Direction.FORWARD);
         
         c.manualBrakeMode.set(false);
+        c.powerThreshold.set(0.001);
     });
 
     public static ForesightConfig foresightConfig = new ForesightConfig(c -> {

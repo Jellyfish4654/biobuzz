@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import com.bylazar.telemetry.JoinedTelemetry;
+import com.bylazar.telemetry.PanelsTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Utility;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.bylazar.telemetry.JoinedTelemetry;
-import com.bylazar.telemetry.PanelsTelemetry;
 
 import org.firstinspires.ftc.teamcode.framework.hardware.BallDetector;
 
