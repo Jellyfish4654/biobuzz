@@ -1,0 +1,24 @@
+apply plugin: 'com.android.library'
+
+//apply from: '../build.common.gradle'
+apply from: '../build.dependencies.gradle'
+
+android {
+    namespace = 'com.example.jellytest'
+
+    packagingOptions {
+        jniLibs.useLegacyPackaging true
+    }
+
+
+
+    compileSdkVersion 30
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation project(':FtcRobotController')
+}

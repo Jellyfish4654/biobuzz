@@ -26,4 +26,69 @@ android {
 
 dependencies {
     implementation project(':FtcRobotController')
+    implementation project(':JellyTest')
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        // [Put latest ClassGraph version number here]
+        classpath 'io.github.classgraph:classgraph:4.8.184'
+    }
+}
+
+afterEvaluate { project ->
+    // Get some task references
+    def compileTask = project.tasks.compileDebugJavaWithJavac
+    def mergeTask = project.tasks.mergeDebugResources
+
+    compileTask.doLast {
+        // [Set your parameters here]
+        def packageToScan = "org.firstinspires.ftc.teamcode"
+        def annotationName = "com.example.jellytest.OnBotTestInfo"
+        def scanResultFilename = "scan_result.txt"
+
+        // Create a temporary raw resource directory for saving the scan result to
+        def scanResultDir = compileTask.temporaryDir.toString() +
+                File.separator + "res" + File.separator + "raw" + File.separator
+        new File(scanResultDir).mkdirs()
+        def scanResultPath = scanResultDir + scanResultFilename
+
+        // Get location where .class files were compiled to
+        def classPackageRoot = compileTask.destinationDirectory.dir(".").get().getAsFile().getPath();
+
+        println "Scanning " + classPackageRoot
+        new io.github.classgraph.ClassGraph()
+                .overrideClasspath(classPackageRoot)
+                .acceptPackages(packageToScan)
+                .enableAllInfo()
+                .scan()
+                .withCloseable { scanResult ->
+                    // [Get the scan results you're interested in here]
+                    def resultList = scanResult.getClassesWithAnnotation(annotationName)
+                    // Write the results to the output file
+                    def outputFile = new File(scanResultPath)
+                    outputFile.withWriter { writer ->
+                        resultList.each { ci ->
+                            // Write name of annotated class to output file
+                            writer.println ci.getName()
+                        }
+                    }
+                    println "Wrote scan result to " + outputFile + " ; size = " + outputFile.length()
+                }
+
+        // Run AAPT2 to convert the raw resource file into a .flat file
+        def aapt2Path = android.getSdkDirectory().toPath().resolve("build-tools")
+                .resolve(android.buildToolsVersion).resolve("aapt2")
+        def flatFileOutputPrefix = mergeTask.outputDir.get().toString() + "/"
+        def cmd = [aapt2Path, "compile", "-o", flatFileOutputPrefix, scanResultPath]
+        println "Executing: " + cmd.join(" ")
+        def exec = cmd.execute()
+        exec.in.eachLine {line -> println line}
+        exec.err.eachLine {line -> System.err.println "ERROR: " + line}
+        exec.waitFor()
+        println "Wrote compiled resource as a .flat file to " + flatFileOutputPrefix
+    }
 }

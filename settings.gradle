@@ -7,4 +7,6 @@ pluginManagement {
 }
 
 include ':FtcRobotController'
+include ':JellyTest'
 include ':TeamCode'
+
