@@ -13,7 +13,7 @@ public class FlowerRamp {
 
     public FlowerRamp(Servo servo) {
         this.servo = servo;
-        up();
+        up(); // TODO: make sure ts no move during transition
     }
 
     private void ensureAngle(double desired){
