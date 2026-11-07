@@ -22,7 +22,8 @@ public class FlowerRampTuner extends OpMode {
     
     @Override
     public void loop() {
-        telemetry.addData("Position: ", servo.getPosition());
+        telemetry.addData("Position", servo.getPosition());
+        telemetry.addData("Down", flowerRamp.isDown());
         
         if (gamepad1.dpad_down) {
             flowerRamp.down();

@@ -17,6 +17,8 @@ public class BeamBreakTuner extends OpMode {
     @Override
     public void init() {
         telemetry = new JoinedTelemetry(telemetry, PanelsTelemetry.INSTANCE.getFtcTelemetry());
+        telemetry.setMsTransmissionInterval(1);
+        
         beamBrake = hardwareMap.get(DigitalChannel.class, "intake_sensor");
         detector = new BallDetector(beamBrake);
     }
@@ -24,16 +26,25 @@ public class BeamBreakTuner extends OpMode {
     @Override
     public void loop() {
         detector.update();
-        telemetry.addData("State", beamBrake.getState());
-        if(detector.justUnblocked()){
+        telemetry.addData("Raw State", beamBrake.getState() ? 1 : 0);
+        telemetry.addData("Debounce Blocked", detector.isBlocked() ? 1 : 0);
+        telemetry.addData("Amt of Balls", amtOfBalls);
+        
+        if (detector.justUnblocked()) {
             amtOfBalls++;
             telemetry.addData("Just unblocked", 1);
-        }else{
+        } else {
             telemetry.addData("Just unblocked", 0);
         }
+        
+        if (detector.justBlocked()) {
+            amtOfBalls++;
+            telemetry.addData("Just blocked", 1);
+        } else {
+            telemetry.addData("Just blocked", 0);
+        }
 
-        telemetry.addData("Debounce State", detector.isBlocked());
-        telemetry.addData("Amt of Balls", amtOfBalls);
+        
         telemetry.update();
 
     }
