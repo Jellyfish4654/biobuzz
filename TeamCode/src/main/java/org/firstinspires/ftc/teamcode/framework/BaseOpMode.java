@@ -36,20 +36,20 @@ public abstract class BaseOpMode extends OpMode {
         
         follower = Constants.createFollower(hardwareMap);
         
-        scorer = new Scorer(
-                new Roller(hardwareMap.get(DcMotor.class, "intake"), DcMotor.Direction.FORWARD, () -> Roller.INTAKE_POWER),
-                new BallDetector(hardwareMap.get(DigitalChannel.class, "intake_sensor")),
-                new FlowerRamp(hardwareMap.get(Servo.class, "flower_ramp")),
-                new Roller(hardwareMap.get(DcMotor.class, "transfer"), DcMotor.Direction.FORWARD, () -> Roller.TRANSFER_POWER),
-                new Shooter(
-                        hardwareMap.get(DcMotorEx.class, "pollen_motor"), DcMotorEx.Direction.FORWARD,
-                        hardwareMap.get(Servo.class, "pollen_hood"), Servo.Direction.FORWARD, 0, 1
-                ),
-                new Shooter(
-                        hardwareMap.get(DcMotorEx.class, "nectar_motor"), DcMotorEx.Direction.FORWARD,
-                        hardwareMap.get(Servo.class, "nectar_hood"), Servo.Direction.FORWARD, 0, 1
-                )
-        );
+//        scorer = new Scorer(
+//                new Roller(hardwareMap.get(DcMotor.class, "intake"), DcMotor.Direction.FORWARD, () -> Roller.INTAKE_POWER),
+//                new BallDetector(hardwareMap.get(DigitalChannel.class, "intake_sensor")),
+//                new FlowerRamp(hardwareMap.get(Servo.class, "flower_ramp")),
+//                new Roller(hardwareMap.get(DcMotor.class, "transfer"), DcMotor.Direction.FORWARD, () -> Roller.TRANSFER_POWER),
+//                new Shooter(
+//                        hardwareMap.get(DcMotorEx.class, "pollen_motor"), DcMotorEx.Direction.FORWARD,
+//                        hardwareMap.get(Servo.class, "pollen_hood"), Servo.Direction.FORWARD, 0, 1
+//                ),
+//                new Shooter(
+//                        hardwareMap.get(DcMotorEx.class, "nectar_motor"), DcMotorEx.Direction.FORWARD,
+//                        hardwareMap.get(Servo.class, "nectar_hood"), Servo.Direction.FORWARD, 0, 1
+//                )
+//        );
         
         controls = new ControlMap(gamepad1, gamepad2);
     }
@@ -60,7 +60,7 @@ public abstract class BaseOpMode extends OpMode {
         for (int i=0; i<12; i++) {
             telemetry.addLine("---------------------------------------------------------------------------");
         }
-        timingTelemetry();
+        utilityTelemetry();
     }
     
     @Override
@@ -78,8 +78,8 @@ public abstract class BaseOpMode extends OpMode {
         telemetry.addData("\tPose X", "%.2f", follower.pose().x());
         telemetry.addData("\tPose Y", "%.2f", follower.pose().x());
         telemetry.addData("\tPose H", "%.2f", Math.toDegrees(follower.pose().heading()));
-        telemetry.addLine("\t" + follower.velocity());
-        telemetry.addLine("\t" + follower.twist());
+//        telemetry.addLine("\t" + follower.velocity());
+//        telemetry.addLine("\t" + follower.twist());
         
         telemetry.addData("\tMode", follower.mode());
         if (follower.isBusy()) {
@@ -90,10 +90,12 @@ public abstract class BaseOpMode extends OpMode {
             }
         }
         
-        telemetry.addLine("\nUtility:");
-        timingTelemetry();
-        telemetry.addData("\tAlliance", Storage.alliance);
-        // Manual bulk caching would go here
+        telemetry.addLine("\nScorer:");
+        telemetry.addData("\tMode", scorer.mode());
+        telemetry.addData("\tBalls", Storage.balls);
+        telemetry.addData("\tFlower Ramp Down", scorer.flowerRamp.isDown());
+        
+        utilityTelemetry();
     }
     
     @Override
@@ -105,7 +107,10 @@ public abstract class BaseOpMode extends OpMode {
     
     private long prevLoopNanoTime = 0;
     private boolean alertedEndgame = false;
-    protected void timingTelemetry() {
+    protected void utilityTelemetry() {
+        telemetry.addLine("\nUtility:");
+        telemetry.addData("\tAlliance", Storage.alliance);
+        
         // loop speed
         long currentNanoTime = System.nanoTime();
         long nanoPerLoop = currentNanoTime - prevLoopNanoTime;
@@ -116,7 +121,7 @@ public abstract class BaseOpMode extends OpMode {
         telemetry.addData("\tLoop Hz", "%.2f", hz);
         
         // runtime and alerts
-        telemetry.addData("\tRuntime", "%.2f", getRuntime());
+        telemetry.addData("\tRuntime", (int) getRuntime());
         if (getRuntime() >= 110 && !alertedEndgame) {
             alertedEndgame = true;
             controls.megaRumble();
