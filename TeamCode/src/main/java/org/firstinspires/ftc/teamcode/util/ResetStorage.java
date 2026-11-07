@@ -12,5 +12,6 @@ public class ResetStorage extends LinearOpMode {
         Storage.poseBackup = Storage.DEFAULT_POSE;
         Storage.alliance = Storage.Alliance.UNKNOWN;
         Storage.balls = 0;
+        requestOpModeStop();
     }
 }

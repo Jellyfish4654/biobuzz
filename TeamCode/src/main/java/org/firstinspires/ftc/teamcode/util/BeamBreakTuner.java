@@ -43,9 +43,5 @@ public class BeamBreakTuner extends OpMode {
         } else {
             telemetry.addData("Just blocked", 0);
         }
-
-        
-        telemetry.update();
-
     }
 }

@@ -73,6 +73,11 @@ public abstract class BaseOpMode extends OpMode {
         follower.update();
         Storage.poseBackup = follower.pose();
         
+        telemetry.addLine("\nScorer:");
+        telemetry.addData("\tMode", scorer.mode());
+        telemetry.addData("\tBalls", Storage.balls);
+        telemetry.addData("\tFlower Ramp Down", scorer.flowerRamp.isDown());
+        
         // TODO: determine how much of this is useful
         telemetry.addLine("\nFollower:");
         telemetry.addData("\tPose X", "%.2f", follower.pose().x());
@@ -89,11 +94,6 @@ public abstract class BaseOpMode extends OpMode {
                 telemetry.addData("\t\tPath Completion", "%.4f", follower.completion());
             }
         }
-        
-        telemetry.addLine("\nScorer:");
-        telemetry.addData("\tMode", scorer.mode());
-        telemetry.addData("\tBalls", Storage.balls);
-        telemetry.addData("\tFlower Ramp Down", scorer.flowerRamp.isDown());
         
         utilityTelemetry();
     }
