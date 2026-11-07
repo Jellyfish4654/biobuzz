@@ -33,6 +33,8 @@ public class BeamBreakTuner extends OpMode {
         }
 
         telemetry.addData("Debounce State", detector.isBlocked());
+        telemetry.addData("Amt of Balls", amtOfBalls);
+        telemetry.update();
 
     }
 }
