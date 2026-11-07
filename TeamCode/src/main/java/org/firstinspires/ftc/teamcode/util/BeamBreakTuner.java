@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Utility;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 
-import org.firstinspires.ftc.teamcode.framework.hardware.BallDetector;
+import org.firstinspires.ftc.teamcode.framework.scoring.BallDetector;
 
 @Utility(name = "Beam Break Tuner", description = "Logs the state of Digital Channel \"intake_sensor\" to telemetry.")
 public class BeamBreakTuner extends OpMode {

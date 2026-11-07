@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.framework.hardware;
+package org.firstinspires.ftc.teamcode.framework.scoring;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -28,10 +28,13 @@ public class FlowerRamp {
     }
     
     public void down() {
-        ensureAngle(UP_POS);
+        ensureAngle(DOWN_POS);
     }
     
-    // No toggle -- keep to scorer
+    public void toggle() {
+        if (isDown()) up();
+        else down();
+    }
     
     public boolean isDown() {
         return cachedAngle == DOWN_POS;

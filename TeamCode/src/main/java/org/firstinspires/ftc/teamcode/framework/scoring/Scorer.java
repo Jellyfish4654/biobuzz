@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.framework.hardware;
+package org.firstinspires.ftc.teamcode.framework.scoring;
 
 import com.bylazar.configurables.annotations.Configurable;
 
@@ -10,9 +10,9 @@ public class Scorer {
     
     private final Roller intake;
     private final BallDetector intakeSensor;
-    private final FlowerRamp flowerRamp;
+    public final FlowerRamp flowerRamp; // only directly accessed by OpModes
     private final Roller transfer;
-    private final Shooter shooterPollen, shooterNectar; // TODO: work on shooter, add flower ramp
+    private final Shooter shooterPollen, shooterNectar; // TODO: work on shooter
     private Mode mode = Mode.IDLE;
     private long shootStartTime = 0L;
     
@@ -87,14 +87,6 @@ public class Scorer {
     public void ejectSustain() {
         if (mode != Mode.SHOOT && Storage.balls > 0) {
             mode = Mode.EJECT;
-        }
-    }
-    
-    public void flowerRampToggle() {
-        if (flowerRamp.isDown()) {
-            flowerRamp.up();
-        } else {
-            flowerRamp.down();
         }
     }
     

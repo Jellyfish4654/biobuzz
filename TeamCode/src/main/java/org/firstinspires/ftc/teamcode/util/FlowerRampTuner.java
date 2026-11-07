@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Utility;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.framework.hardware.FlowerRamp;
+import org.firstinspires.ftc.teamcode.framework.scoring.FlowerRamp;
 
 @Utility(name = "Flower Ramp Tuner",description = "Tune angle for up and down positions of the flower ramp")
 public class FlowerRampTuner extends OpMode {

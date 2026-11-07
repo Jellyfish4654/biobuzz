@@ -10,11 +10,11 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.framework.hardware.BallDetector;
-import org.firstinspires.ftc.teamcode.framework.hardware.FlowerRamp;
-import org.firstinspires.ftc.teamcode.framework.hardware.Roller;
-import org.firstinspires.ftc.teamcode.framework.hardware.Scorer;
-import org.firstinspires.ftc.teamcode.framework.hardware.Shooter;
+import org.firstinspires.ftc.teamcode.framework.scoring.BallDetector;
+import org.firstinspires.ftc.teamcode.framework.scoring.FlowerRamp;
+import org.firstinspires.ftc.teamcode.framework.scoring.Roller;
+import org.firstinspires.ftc.teamcode.framework.scoring.Scorer;
+import org.firstinspires.ftc.teamcode.framework.scoring.Shooter;
 import org.firstinspires.ftc.teamcode.framework.pedro.Constants;
 
 public abstract class BaseOpMode extends OpMode {

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.framework.hardware;
+package org.firstinspires.ftc.teamcode.framework.scoring;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
