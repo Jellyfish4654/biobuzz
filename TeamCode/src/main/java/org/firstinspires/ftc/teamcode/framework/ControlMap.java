@@ -8,8 +8,8 @@ public class ControlMap {
     // TODO: strafe adjustment factor?
     // TODO: something that adds panels gamepad data to gamepads
     public static double DEADBAND = 0.02; // sticks and triggers
-    public static double PRECISION_MULTIPLIER_COARSE = 0.35;
-    public static double PRECISION_MULTIPLIER_FINE = 0.2;
+    public static double PRECISION_MULTIPLIER_COARSE = 1.0 / 2;
+    public static double PRECISION_MULTIPLIER_FINE = 1.0 / 3;
     private final Gamepad gamepad1, gamepad2;
     
     public ControlMap(Gamepad gamepad1, Gamepad gamepad2) {
@@ -22,11 +22,11 @@ public class ControlMap {
     public double driveFwd() {
         return applyDeadband(-(gamepad1.left_stick_y + gamepad2.left_stick_y)) * activePrecisionMultiplier();
     }
-    public double driveStr() {
-        return applyDeadband(gamepad1.left_stick_x + gamepad2.left_stick_x) * activePrecisionMultiplier();
+    public double driveLeft() {
+        return applyDeadband(-(gamepad1.left_stick_x + gamepad2.left_stick_x)) * activePrecisionMultiplier();
     }
-    public double driveTrn() {
-        return applyDeadband(gamepad1.right_stick_x + gamepad2.right_stick_x) * activePrecisionMultiplier();
+    public double driveTurn() {
+        return applyDeadband(-(gamepad1.right_stick_x + gamepad2.right_stick_x)) * activePrecisionMultiplier();
     }
     public boolean driveModePressed() {
         return gamepad1.psWasPressed() || gamepad2.psWasPressed();
@@ -67,12 +67,11 @@ public class ControlMap {
     }
     
     // linear rescaled deadband: lowers inputs to start at 0 and scales up to reach 1
-    private static double applyDeadband(double stick) {
-        double absStick = Math.abs(stick);
+    private static double applyDeadband(double raw) {
+        double absStick = Math.abs(raw);
         if (absStick > DEADBAND) {
             double scaledValue = (absStick - DEADBAND) / (1 - DEADBAND);
-            // make the lowered stick a fraction of its maximum range to stretch it back to 0 - 1
-            return Math.copySign(scaledValue, stick); // finish by copying the sign
+            return Math.copySign(scaledValue, raw);
         } else {
             return 0;
         }

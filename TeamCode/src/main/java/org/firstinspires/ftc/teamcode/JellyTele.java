@@ -3,11 +3,13 @@ package org.firstinspires.ftc.teamcode;
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.drivetrain.DrivePowers;
 import com.pedropathing.follower.ManualDrive;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.framework.BaseOpMode;
 import org.firstinspires.ftc.teamcode.framework.Storage;
 
 @Configurable
+@TeleOp(name = "JellyTele")
 public class JellyTele extends BaseOpMode {
     public static double MAX_HOLD_VELOCITY = 0.2;
     
@@ -35,8 +37,8 @@ public class JellyTele extends BaseOpMode {
         
         DrivePowers powers = new DrivePowers(
                 controls.driveFwd(),
-                controls.driveStr(),
-                controls.driveTrn()
+                controls.driveLeft(),
+                controls.driveTurn()
         );
         
         if (fieldCentric) {
@@ -47,8 +49,8 @@ public class JellyTele extends BaseOpMode {
         }
         
         telemetry.addData("\tForward", "%.2f", controls.driveFwd());
-        telemetry.addData("\tStrafe", "%.2f", controls.driveStr());
-        telemetry.addData("\tTurn", "%.2f", controls.driveTrn());
+        telemetry.addData("\tLeft", "%.2f", controls.driveLeft());
+        telemetry.addData("\tTurn", "%.2f", controls.driveTurn());
         
         if (controls.defensive()) { // TODO: replace with if shooter active
             ManualDrive.driveOrHold(follower, powers, 0, MAX_HOLD_VELOCITY);
