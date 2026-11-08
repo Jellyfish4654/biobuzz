@@ -9,7 +9,6 @@ public class BallDetector {
 
     private final DigitalChannel beamBreak;
     private boolean prevRaw = true;
-    private boolean debounceGoal = false;
     private long prevTime;
     
     // ↓ final values for if the beam sensor is broken on this and last iteration
@@ -25,12 +24,14 @@ public class BallDetector {
         // if state changes, reset timer
         if (beamBreak.getState() != prevRaw) {
             prevTime = System.currentTimeMillis();
-            debounceGoal = beamBreak.getState();
         }
         // update blocked if enough time has elapsed
-        if (System.currentTimeMillis() - prevTime > DEBOUNCE_MS && beamBreak.getState()==debounceGoal) {
-            prevBroken = broken;
-            broken = !beamBreak.getState();
+        if (System.currentTimeMillis() - prevTime > DEBOUNCE_MS) {
+            //e.g. if the beambreak says its broken and our boolean says it isnt broken -- the opposite
+            if(beamBreak.getState() == broken){
+                prevBroken = broken;
+                broken = !beamBreak.getState();
+            }
         }
         prevRaw = beamBreak.getState();
     }
