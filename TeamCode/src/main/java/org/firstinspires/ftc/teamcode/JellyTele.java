@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.framework.Storage;
 @Configurable
 @TeleOp(name = "JellyTele")
 public class JellyTele extends BaseOpMode {
-    public static double MAX_HOLD_VELOCITY = 0.2;
+    public static double HOLD_START_VELOCITY = 0.2;
     
     @Override
     public void init() {
@@ -53,8 +53,7 @@ public class JellyTele extends BaseOpMode {
         telemetry.addData("\tTurn", "%.2f", controls.driveTurn());
         
         if (controls.defensive()) { // TODO: replace with Scorer.mode() == Scorer.Mode.SHOOT once it initializes
-            ManualDrive.driveOrHold(follower, powers, 0, MAX_HOLD_VELOCITY);
-            // TODO: worried that this will not hold original position & release on shove; may need implement manually
+            ManualDrive.driveOrHold(follower, powers, 0, HOLD_START_VELOCITY);
         } else {
             follower.manual(powers);
         }

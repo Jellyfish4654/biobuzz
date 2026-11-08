@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 @Configurable
 public class ControlMap {
-    // TODO: strafe adjustment factor?
     // TODO: something that adds panels gamepad data to gamepads
     public static double DEADBAND = 0.02; // sticks and triggers
     public static double PRECISION_MULTIPLIER_COARSE = 1.0 / 2;
