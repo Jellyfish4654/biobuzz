@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.framework.scoring.BallDetector;
 import org.firstinspires.ftc.teamcode.framework.scoring.FlowerRamp;
 import org.firstinspires.ftc.teamcode.framework.scoring.Roller;
@@ -33,6 +34,9 @@ public abstract class BaseOpMode extends OpMode {
         
         // TODO: telemetry works?
         telemetry = new JoinedTelemetry(telemetry, PanelsTelemetry.INSTANCE.getFtcTelemetry());
+        telemetry.setCaptionValueSeparator(": ");
+        telemetry.setMsTransmissionInterval(250);
+        telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML);
         
         follower = Constants.createFollower(hardwareMap);
         
@@ -56,10 +60,7 @@ public abstract class BaseOpMode extends OpMode {
     
     @Override
     public void init_loop() {
-        telemetry.addLine("Status: Init Finished  --------------------------------------------");
-        for (int i=0; i<12; i++) {
-            telemetry.addLine("---------------------------------------------------------------------------");
-        }
+        telemetry.addLine("<b><font color='green'>INIT FINISHED</font></b>");
         utilityTelemetry();
     }
     
@@ -73,20 +74,21 @@ public abstract class BaseOpMode extends OpMode {
         follower.update();
         Storage.poseBackup = follower.pose();
         
-        telemetry.addLine("\nScorer:");
-        telemetry.addData("\tMode", scorer.mode());
-        telemetry.addData("\tBalls", Storage.balls);
-        telemetry.addData("\tFlower Ramp Down", scorer.flowerRamp.isDown());
+//        telemetry.addLine("\n<b>Scorer:</b>");
+//        telemetry.addData("\tMode", scorer.mode());
+//        telemetry.addData("\tBalls", Storage.balls);
+//        telemetry.addData("\tFlower Ramp Down", scorer.flowerRamp.isDown());
         
         // TODO: determine how much of this is useful
-        telemetry.addLine("\nFollower:");
+        telemetry.addLine("\n<b>Follower:</b>");
+        telemetry.addData("\tMode", follower.mode());
         telemetry.addData("\tPose X", "%.2f", follower.pose().x());
-        telemetry.addData("\tPose Y", "%.2f", follower.pose().x());
-        telemetry.addData("\tPose H", "%.2f", Math.toDegrees(follower.pose().heading()));
+        telemetry.addData("\tPose Y", "%.2f", follower.pose().y());
+        telemetry.addData("\tHeading", "%.2f", Math.toDegrees(follower.pose().heading()));
 //        telemetry.addLine("\t" + follower.velocity());
 //        telemetry.addLine("\t" + follower.twist());
         
-        telemetry.addData("\tMode", follower.mode());
+        
         if (follower.isBusy()) {
             telemetry.addData("\t\tTarget Pose", follower.poseAt(1));
             if (follower.following()) {
@@ -108,7 +110,7 @@ public abstract class BaseOpMode extends OpMode {
     private long prevLoopNanoTime = 0;
     private boolean alertedEndgame = false;
     protected void utilityTelemetry() {
-        telemetry.addLine("\nUtility:");
+        telemetry.addLine("\n<b>Utility:</b>");
         telemetry.addData("\tAlliance", Storage.alliance);
         
         // loop speed
