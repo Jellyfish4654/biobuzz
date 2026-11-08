@@ -32,12 +32,17 @@ dependencies {
 buildscript {
     repositories {
         mavenCentral()
+        google()
+        maven { url "https://repo.dairy.foundation/releases" }
     }
     dependencies {
         // [Put latest ClassGraph version number here]
         classpath 'io.github.classgraph:classgraph:4.8.184'
+        classpath "dev.frozenmilk:Load:0.3.2"
     }
 }
+
+apply plugin: 'dev.frozenmilk.sinister.sloth.load'
 
 afterEvaluate { project ->
     // Get some task references

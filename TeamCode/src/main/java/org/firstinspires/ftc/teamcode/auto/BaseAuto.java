@@ -36,12 +36,12 @@ public abstract class BaseAuto extends BaseOpMode {
     @Override
     public void loop() {
         Scheduler.execute();
-        if (Scheduler.isRunning(routine)) {
-            telemetry.addLine("\nIvy: Running");
-        } else if (Scheduler.isScheduled(routine)) {
-            telemetry.addLine("\nIvy: Scheduled");
-        } else {
-            requestOpModeStop();
+        if (!Scheduler.isRunning(routine)) {
+            if (Scheduler.isScheduled(routine)) {
+                telemetry.addLine("\nWARNING: Ivy routine scheduled, not running");
+            } else {
+                requestOpModeStop();
+            }
         }
         
         super.loop();
