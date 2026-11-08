@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.util.preseason;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Utility;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
+@Disabled
 @Utility(name = "Jamie Motor Tester", description = "Toggles the power of \"test_motor\" when \"test_sensor\" is touched.")
 public class JamieMotorTester extends LinearOpMode {
     private static final double POWER = 1;
