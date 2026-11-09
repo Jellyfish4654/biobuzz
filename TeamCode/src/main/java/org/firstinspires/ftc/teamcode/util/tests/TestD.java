@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.tests;
+package org.firstinspires.ftc.teamcode.util.tests;
 
 import com.example.jellytest.OnBotTest;
 import com.example.jellytest.OnBotTestInfo;
