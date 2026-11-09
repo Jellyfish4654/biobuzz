@@ -23,6 +23,7 @@ public class JellyTele extends BaseOpMode {
     
     @Override
     public void loop() {
+        controls.syncWithPanels();
         updateManualDrive();
         
         super.loop();

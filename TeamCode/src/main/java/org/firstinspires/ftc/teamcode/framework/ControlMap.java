@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.framework;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.gamepad.GamepadManager;
+import com.bylazar.gamepad.PanelsGamepad;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 @Configurable
 public class ControlMap {
-    // TODO: something that adds panels gamepad data to gamepads
     public static double DEADBAND = 0.02; // sticks and triggers
     public static double PRECISION_MULTIPLIER_COARSE = 1.0 / 2;
     public static double PRECISION_MULTIPLIER_FINE = 1.0 / 3;
@@ -14,6 +15,12 @@ public class ControlMap {
     public ControlMap(Gamepad gamepad1, Gamepad gamepad2) {
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
+        syncWithPanels();
+    }
+    
+    public void syncWithPanels() { // TODO: test this
+        combineGamepads(gamepad1, PanelsGamepad.INSTANCE.getFirstManager());
+        combineGamepads(gamepad2, PanelsGamepad.INSTANCE.getSecondManager());
     }
     
     // ↓ -------------- ↓ -------------- ↓ GAMEPAD MAPPING ↓ -------------- ↓ -------------- ↓
@@ -74,5 +81,41 @@ public class ControlMap {
         } else {
             return 0;
         }
+    }
+    
+    private void combineGamepads(Gamepad main, GamepadManager panels) {
+        if (panels == null) return;
+        
+        if (panels.getLeftStickX() != 0) main.left_stick_x = (float) panels.getLeftStickX();
+        if (panels.getLeftStickY() != 0) main.left_stick_y = (float) panels.getLeftStickY();
+        if (panels.getRightStickX() != 0) main.right_stick_x = (float) panels.getRightStickX();
+        if (panels.getRightStickY() != 0) main.right_stick_y = (float) panels.getRightStickY();
+        
+        if (panels.getL2() != 0) main.left_trigger = (float) panels.getL2();
+        if (panels.getR2() != 0) main.right_trigger = (float) panels.getR2();
+        
+        if (panels.getTouchpad()) main.touchpad = true;
+        
+        if (panels.getLeftStickPressed()) main.left_stick_button = true;
+        if (panels.getRightStickPressed()) main.right_stick_button = true;
+        
+        if (panels.getDpadUp()) main.dpad_up = true;
+        if (panels.getDpadDown()) main.dpad_down = true;
+        if (panels.getDpadLeft()) main.dpad_left = true;
+        if (panels.getDpadRight()) main.dpad_right = true;
+        
+        if (panels.getCross()) main.a = true;
+        if (panels.getCircle()) main.b = true;
+        if (panels.getSquare()) main.x = true;
+        if (panels.getTriangle()) main.y = true;
+        
+        if (panels.getPs()) main.guide = true;
+        if (panels.getOptions()) main.start = true;
+        if (panels.getShare()) main.back = true;
+        
+        if (panels.getL1()) main.left_bumper = true;
+        if (panels.getR1()) main.right_bumper = true;
+        
+        main.copy(main); // updates aliases, trigger booleans, & edge detection
     }
 }

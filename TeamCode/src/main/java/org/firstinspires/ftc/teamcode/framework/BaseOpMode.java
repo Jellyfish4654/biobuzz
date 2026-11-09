@@ -38,6 +38,8 @@ public abstract class BaseOpMode extends OpMode {
         telemetry.setMsTransmissionInterval(250);
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML);
         
+        controls = new ControlMap(gamepad1, gamepad2);
+        
         follower = Constants.createFollower(hardwareMap);
         
 //        scorer = new Scorer(
@@ -54,8 +56,6 @@ public abstract class BaseOpMode extends OpMode {
 //                        hardwareMap.get(Servo.class, "nectar_hood"), Servo.Direction.FORWARD, 0, 1
 //                )
 //        );
-        
-        controls = new ControlMap(gamepad1, gamepad2);
     }
     
     @Override
