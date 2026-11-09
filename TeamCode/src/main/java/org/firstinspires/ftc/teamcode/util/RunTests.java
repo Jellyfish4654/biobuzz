@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.util;
 
 
 import android.content.res.Resources;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.bylazar.telemetry.JoinedTelemetry;
 import com.bylazar.telemetry.PanelsTelemetry;
@@ -14,10 +17,21 @@ import com.example.jellytest.TestUITelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Utility;
 
+//sinister stuff
+import dev.frozenmilk.sinister.Scanner;
+import dev.frozenmilk.sinister.targeting.SearchTarget;
+import dev.frozenmilk.sinister.targeting.TeamCodeSearch;
+import dev.frozenmilk.util.graph.Graph;
+import dev.frozenmilk.util.graph.rule.AdjacencyRule;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 @Utility(name = "JellyTest", description = "Run the JellyTest OnBot test suite")
 public class RunTests extends LinearOpMode {
@@ -348,56 +362,78 @@ public class RunTests extends LinearOpMode {
     }
 
     /**Gets all annotated classes, makes an instance of them, and files in sets */
-    void getAnnotatedClasses(){
-        //all credit for the next couple lines goes to classgraph/classgraph on github
-        //they allow for this program to retrieve the annotated classes from a text file made at buildtime
-        //IMPORTANT: the build script for generating this file must be present in TeamCode's build.gradle
-        String scanResultFilename = "scan_result";  // Drop the filename extension, if any
-        Resources resources = hardwareMap.appContext.getResources();
-        String packageName = hardwareMap.appContext.getPackageName();
+    public static abstract class TestScanner implements Scanner {
+        public TestScanner() {}
+        static Map<ClassLoader,List<OnBotTest>> onBotTests = new HashMap<>();
 
+        static final SearchTarget targets = new TeamCodeSearch();
+        AdjacencyRule<Scanner, Graph<Scanner>> loadAdjacencyRule = afterConfiguration();
+        AdjacencyRule<Scanner, Graph<Scanner>> unloadAdjacencyRule = beforeConfiguration();
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                resources.openRawResource(
-                        resources.getIdentifier(
-                                scanResultFilename, "raw", packageName))))) {
-            for (String line; (line = reader.readLine()) != null; ) {
-                Class currentClass = Class.forName(line);
-                if(currentClass.getSuperclass() == OnBotTest.class){
-                    OnBotTest currentTest = (OnBotTest) currentClass.newInstance();
+        @Override
+        public SearchTarget getTargets(){
+            return targets;
+        }
+        @Override
+        public void beforeScan(ClassLoader loader){
+            onBotTests.putIfAbsent(loader,new ArrayList<OnBotTest>());
+        }
 
-                    currentTest.hardwareMap = hardwareMap;
-                    currentTest.telemetry = new TestTelemetry();
-                    currentTest.gamepad = gamepad2;
-
-                    onBotTests.add(currentTest);
-
-                    OnBotTestInfo annotation = currentTest.getClass().getAnnotation(OnBotTestInfo.class);
-
-
-                    //add to a testSet
-                    boolean addedToSet = false;
-                    if(!annotation.testSetName().isEmpty()){
-                        for(TestSet set : testSets){
-                            if(set.name.equals(annotation.testSetName())){
-                                set.addTest(currentTest);
-                                addedToSet = true;
-                            }
-                        }
-                    }
-                    if(!addedToSet){
-                        generalTests.addTest(currentTest);
-                        addedToSet = true;
-                    }
-
-
-
+        @Override
+        public void scan(ClassLoader loader, Class<?> cls){
+            if(cls.isAnnotationPresent(OnBotTestInfo.class) && cls.getSuperclass() == OnBotTest.class && onBotTests.containsKey(loader)){
+                try {
+                    Log.i("OnBotTest","whee");
+                    onBotTests.get(loader).add(cls.asSubclass(OnBotTest.class).getDeclaredConstructor().newInstance());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             }
-        } catch (Exception e) {
-            //if there's an error getting tests, nothin we can do;
-            //Ergo throw
-            throw new RuntimeException(e);
+        }
+
+        @Override
+        public void afterScan(ClassLoader loader){}
+
+        @Override
+        public void beforeUnload(ClassLoader loader){}
+        @Override
+        public void unload(ClassLoader loader, Class<?> cls){}
+
+        @Override
+        public void afterUnload(ClassLoader loader){
+            onBotTests.remove(loader);
+        }
+    }
+    void getAnnotatedClasses(){
+        for (ClassLoader i : TestScanner.onBotTests.keySet()) {
+            List<OnBotTest> tests = TestScanner.onBotTests.get(i);
+            for (int z = 0; z < tests.size(); z++) {
+                OnBotTest currentTest = tests.get(z);
+                currentTest.hardwareMap = hardwareMap;
+                currentTest.telemetry = new TestTelemetry();
+                currentTest.gamepad = gamepad2;
+
+                onBotTests.add(currentTest);
+
+                OnBotTestInfo annotation = currentTest.getClass().getAnnotation(OnBotTestInfo.class);
+
+
+                //add to a testSet
+                boolean addedToSet = false;
+                assert annotation != null;
+                if (!annotation.testSetName().isEmpty()) {
+                    for (TestSet set : testSets) {
+                        if (set.name.equals(annotation.testSetName())) {
+                            set.addTest(currentTest);
+                            addedToSet = true;
+                        }
+                    }
+                }
+                if (!addedToSet) {
+                    generalTests.addTest(currentTest);
+                    addedToSet = true;
+                }
+            }
         }
     }
 
