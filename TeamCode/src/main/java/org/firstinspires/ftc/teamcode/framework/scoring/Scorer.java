@@ -9,7 +9,7 @@ public class Scorer {
     public static long SHOOT_MS = 1000;
     
     private final Roller intake;
-    private final BallDetector intakeSensor;
+    private final BeamBreak intakeSensor;
     public final FlowerRamp flowerRamp; // only directly accessed by OpModes
     private final Roller transfer;
     private final Shooter shooterPollen, shooterNectar; // TODO: work on shooter
@@ -17,7 +17,7 @@ public class Scorer {
     private long shootStartTime = 0L;
     
     public Scorer(
-            Roller intake, BallDetector intakeSensor, FlowerRamp flowerRamp,
+            Roller intake, BeamBreak intakeSensor, FlowerRamp flowerRamp,
             Roller transfer, Shooter shooterPollen, Shooter shooterNectar
     ) {
         this.intake = intake;
@@ -35,22 +35,20 @@ public class Scorer {
     public void update() {
         trackIntake();
         switch (mode) {
-            case IDLE:
+            case IDLE: {
                 intake.off();
                 transfer.off();
+                // Shooter.off();
                 break;
-                
-                
-            case INTAKE:
+            }
+            case INTAKE: {
                 intake.on();
                 transfer.on();
                 // Shooter.off()
-                
                 mode = Mode.IDLE; // transient
                 break;
-                
-                
-            case SHOOT:
+            }
+            case SHOOT: {
                 if (System.currentTimeMillis() - shootStartTime < SHOOT_MS) {
                     intake.on();
                     transfer.on();
@@ -60,14 +58,14 @@ public class Scorer {
                     mode = Mode.IDLE;
                 }
                 break;
-                
-                
-            case EJECT:
+            }
+            case EJECT: {
                 intake.reverse();
                 transfer.reverse();
-                
+                // Shooter.off
                 mode = Mode.IDLE; // transient
                 break;
+            }
         }
     }
     
@@ -85,14 +83,14 @@ public class Scorer {
     }
     
     public void ejectSustain() {
-        if (mode != Mode.SHOOT && Storage.balls > 0) {
+        if (mode != Mode.SHOOT) {
             mode = Mode.EJECT;
         }
     }
     
     private void trackIntake() {
         intakeSensor.update();
-        if (intakeSensor.justUnblocked()) {
+        if (intakeSensor.justUnbroke()) {
             if (mode == Mode.INTAKE || mode == Mode.SHOOT) {
                 Storage.balls++;
             } else if (Storage.balls > 0) {

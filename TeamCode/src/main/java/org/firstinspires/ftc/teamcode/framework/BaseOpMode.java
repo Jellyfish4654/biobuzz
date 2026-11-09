@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.framework.scoring.BallDetector;
+import org.firstinspires.ftc.teamcode.framework.scoring.BeamBreak;
 import org.firstinspires.ftc.teamcode.framework.scoring.FlowerRamp;
 import org.firstinspires.ftc.teamcode.framework.scoring.Roller;
 import org.firstinspires.ftc.teamcode.framework.scoring.Scorer;
@@ -42,7 +42,7 @@ public abstract class BaseOpMode extends OpMode {
         
 //        scorer = new Scorer(
 //                new Roller(hardwareMap.get(DcMotor.class, "intake"), DcMotor.Direction.FORWARD, () -> Roller.INTAKE_POWER),
-//                new BallDetector(hardwareMap.get(DigitalChannel.class, "intake_sensor")),
+//                new BeamBreak(hardwareMap.get(DigitalChannel.class, "intake_sensor")),
 //                new FlowerRamp(hardwareMap.get(Servo.class, "flower_ramp")),
 //                new Roller(hardwareMap.get(DcMotor.class, "transfer"), DcMotor.Direction.FORWARD, () -> Roller.TRANSFER_POWER),
 //                new Shooter(
@@ -67,6 +67,7 @@ public abstract class BaseOpMode extends OpMode {
     @Override
     public void start() { // runs before extended
         resetRuntime();
+        alertedEndgame = false;
     }
     
     @Override
