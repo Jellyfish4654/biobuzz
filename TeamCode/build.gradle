@@ -31,12 +31,11 @@ dependencies {
 
 buildscript {
     repositories {
-        google()
         mavenCentral()
+        google()
         maven { url "https://repo.dairy.foundation/releases" }
     }
     dependencies {
-        // [Put latest ClassGraph version number here]
         classpath "dev.frozenmilk:Load:0.3.2"
     }
 }
