@@ -361,49 +361,7 @@ public class RunTests extends LinearOpMode {
         }
     }
 
-    /**Gets all annotated classes, makes an instance of them, and files in sets */
-    public static abstract class TestScanner implements Scanner {
-        public TestScanner() {}
-        static Map<ClassLoader,List<OnBotTest>> onBotTests = new HashMap<>();
 
-        static final SearchTarget targets = new TeamCodeSearch();
-        AdjacencyRule<Scanner, Graph<Scanner>> loadAdjacencyRule = afterConfiguration();
-        AdjacencyRule<Scanner, Graph<Scanner>> unloadAdjacencyRule = beforeConfiguration();
-
-        @Override
-        public SearchTarget getTargets(){
-            return targets;
-        }
-        @Override
-        public void beforeScan(ClassLoader loader){
-            onBotTests.putIfAbsent(loader,new ArrayList<OnBotTest>());
-        }
-
-        @Override
-        public void scan(ClassLoader loader, Class<?> cls){
-            if(cls.isAnnotationPresent(OnBotTestInfo.class) && cls.getSuperclass() == OnBotTest.class && onBotTests.containsKey(loader)){
-                try {
-                    Log.i("OnBotTest","whee");
-                    onBotTests.get(loader).add(cls.asSubclass(OnBotTest.class).getDeclaredConstructor().newInstance());
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-
-        @Override
-        public void afterScan(ClassLoader loader){}
-
-        @Override
-        public void beforeUnload(ClassLoader loader){}
-        @Override
-        public void unload(ClassLoader loader, Class<?> cls){}
-
-        @Override
-        public void afterUnload(ClassLoader loader){
-            onBotTests.remove(loader);
-        }
-    }
     void getAnnotatedClasses(){
         for (ClassLoader i : TestScanner.onBotTests.keySet()) {
             List<OnBotTest> tests = TestScanner.onBotTests.get(i);
