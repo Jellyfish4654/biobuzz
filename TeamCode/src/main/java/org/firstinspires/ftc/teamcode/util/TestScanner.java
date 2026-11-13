@@ -22,7 +22,7 @@ import dev.frozenmilk.util.graph.rule.AdjacencyRule;
 /**Gets all annotated classes, makes an instance of them, and files in sets */
 public class TestScanner implements Scanner {
     public static Map<ClassLoader, List<OnBotTest>> onBotTests = new HashMap<>();
-    //public static final TestScanner INSTANCE = new TestScanner();
+    public static final TestScanner INSTANCE = new TestScanner();
     static final SearchTarget targets = new TeamCodeSearch();
 
     @Override
@@ -47,7 +47,7 @@ public class TestScanner implements Scanner {
     public void scan(ClassLoader loader, Class<?> cls){
         if(cls.isAnnotationPresent(OnBotTestInfo.class) && cls.getSuperclass() == OnBotTest.class && onBotTests.containsKey(loader)){
             try {
-                Log.i("OnBotTest","whee");
+                Log.i("OnBotTest",cls.getName());
                 onBotTests.get(loader).add(cls.asSubclass(OnBotTest.class).getDeclaredConstructor().newInstance());
             } catch (Exception e) {
                 throw new RuntimeException(e);

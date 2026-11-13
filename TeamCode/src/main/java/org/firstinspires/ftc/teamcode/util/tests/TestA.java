@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.util.tests;
 import com.example.jellytest.OnBotTest;
 import com.example.jellytest.OnBotTestInfo;
 
-@OnBotTestInfo(repeats = 2)
+@OnBotTestInfo(repeats = 3)
 public class TestA extends OnBotTest {
     int runNum;
     @Override
