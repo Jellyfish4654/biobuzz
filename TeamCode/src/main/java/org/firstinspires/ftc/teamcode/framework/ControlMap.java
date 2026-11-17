@@ -18,7 +18,7 @@ public class ControlMap {
         syncWithPanels();
     }
     
-    public void syncWithPanels() { // TODO: test this
+    public void syncWithPanels() { // TODO: test this (i think it works but more validation is needed)
         combineGamepads(gamepad1, PanelsGamepad.INSTANCE.getFirstManager());
         combineGamepads(gamepad2, PanelsGamepad.INSTANCE.getSecondManager());
     }

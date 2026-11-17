@@ -26,13 +26,10 @@ public abstract class BaseOpMode extends OpMode {
     // TODO: make sure nothing moves during auto → teleop transition
     @Override
     public void init() { // runs before extended
-        // Bulk caching for hubs will hopefully improve performance!
-        // TODO: Try manual caching if needed for ultra performance
         for (LynxModule hub : hardwareMap.getAll(LynxModule.class)) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
         
-        // TODO: telemetry works?
         telemetry = new JoinedTelemetry(telemetry, PanelsTelemetry.INSTANCE.getFtcTelemetry());
         telemetry.setCaptionValueSeparator(": ");
         telemetry.setMsTransmissionInterval(250);

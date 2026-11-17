@@ -12,7 +12,7 @@ public class Scorer {
     private final BeamBreak intakeSensor;
     public final FlowerRamp flowerRamp; // only directly accessed by OpModes
     private final Roller transfer;
-    private final Shooter shooterPollen, shooterNectar; // TODO: work on shooter
+    private final Shooter shooterPollen, shooterNectar; // TODO: work on shooter, servo blockers
     private Mode mode = Mode.IDLE;
     private long shootStartTime = 0L;
     
