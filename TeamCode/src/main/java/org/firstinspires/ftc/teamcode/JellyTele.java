@@ -24,8 +24,26 @@ public class JellyTele extends BaseOpMode {
     @Override
     public void loop() {
         controls.syncWithPanels();
+
+
+        /*if (controls.intake()) {
+            scorer.intakeSustain();
+        }
+
+        if (controls.eject()) {
+            scorer.ejectSustain();
+        }
+
+        if (controls.flowerPressed()) {
+            scorer.flowerRamp.toggle();
+        }
+
+        if (controls.shoot()) {
+            scorer.shootStart();
+        }*/
+
         updateManualDrive();
-        
+
         super.loop();
     }
     

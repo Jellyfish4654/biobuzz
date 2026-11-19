@@ -94,6 +94,7 @@ public abstract class BaseOpMode extends OpMode {
                 telemetry.addData("\t\tPath Completion", "%.4f", follower.completion());
             }
         }
+
         
         utilityTelemetry();
     }

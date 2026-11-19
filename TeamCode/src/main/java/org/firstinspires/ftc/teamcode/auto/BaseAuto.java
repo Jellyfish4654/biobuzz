@@ -13,7 +13,7 @@ public abstract class BaseAuto extends BaseOpMode {
     protected abstract Pose getStartPose();
     protected abstract Command fullRoutine();
     private Command routine;
-    private final PoseFactory poseFactory = allianceBasedSetup();
+    final PoseFactory poseFactory = allianceBasedSetup();
     
     @Override
     public void init() {

@@ -10,6 +10,7 @@ public class ControlMap {
     public static double DEADBAND = 0.02; // sticks and triggers
     public static double PRECISION_MULTIPLIER_COARSE = 1.0 / 2;
     public static double PRECISION_MULTIPLIER_FINE = 1.0 / 3;
+    public static float TRIGGER_THRESHOLD = 0.6f;
     private final Gamepad gamepad1, gamepad2;
     
     public ControlMap(Gamepad gamepad1, Gamepad gamepad2) {
@@ -37,10 +38,22 @@ public class ControlMap {
     public boolean driveModePressed() {
         return gamepad1.psWasPressed() || gamepad2.psWasPressed();
     }
-    public boolean defensive() { // TODO: temp
-        return gamepad1.cross || gamepad2.cross;
+
+    public boolean shoot(){
+        return gamepad1.left_trigger > TRIGGER_THRESHOLD;
     }
-    
+
+    public boolean intake(){
+        return gamepad1.right_trigger > TRIGGER_THRESHOLD;
+    }
+
+    public boolean eject(){
+        return gamepad2.right_trigger > TRIGGER_THRESHOLD;
+    }
+
+    public boolean flowerPressed(){
+        return gamepad1.crossWasPressed() || gamepad2.crossWasPressed();
+    }
     public void rumble(int durationMs){
         gamepad1.rumble(durationMs);
         gamepad2.rumble(durationMs);
