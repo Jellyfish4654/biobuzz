@@ -76,7 +76,7 @@ public class Scorer {
     }
     
     public void shootStart() {
-        if (Storage.balls > 0) {
+        if (mode != Mode.SHOOT && Storage.balls > 0) {
             mode = Mode.SHOOT;
             shootStartTime = System.currentTimeMillis();
         }
