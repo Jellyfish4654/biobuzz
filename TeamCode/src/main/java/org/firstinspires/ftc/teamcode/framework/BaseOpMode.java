@@ -70,6 +70,7 @@ public abstract class BaseOpMode extends OpMode {
     @Override
     public void loop() { // runs after extended
         follower.update();
+        //scorer.update();
         Storage.poseBackup = follower.pose();
         
 //        telemetry.addLine("\n<b>Scorer:</b>");
