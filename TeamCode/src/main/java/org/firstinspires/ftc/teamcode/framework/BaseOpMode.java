@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.framework.scoring.BeamBreak;
+import org.firstinspires.ftc.teamcode.framework.scoring.Blocker;
 import org.firstinspires.ftc.teamcode.framework.scoring.FlowerRamp;
 import org.firstinspires.ftc.teamcode.framework.scoring.Roller;
 import org.firstinspires.ftc.teamcode.framework.scoring.Scorer;
@@ -51,7 +52,9 @@ public abstract class BaseOpMode extends OpMode {
 //                new Shooter(
 //                        hardwareMap.get(DcMotorEx.class, "nectar_motor"), DcMotorEx.Direction.FORWARD,
 //                        hardwareMap.get(Servo.class, "nectar_hood"), Servo.Direction.FORWARD, 0, 1
-//                )
+//                ),
+//                new Blocker(hardwareMap.get(Servo.class,"pollen_blocker")),
+//                new Blocker(hardwareMap.get(Servo.class,"nectar_blocker"))
 //        );
     }
     

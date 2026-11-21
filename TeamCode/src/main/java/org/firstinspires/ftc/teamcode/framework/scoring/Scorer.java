@@ -12,13 +12,15 @@ public class Scorer {
     private final BeamBreak intakeSensor;
     public final FlowerRamp flowerRamp; // only directly accessed by OpModes
     private final Roller transfer;
+    private final Blocker blockerNectar;
+    private final Blocker blockerPollen;
     private final Shooter shooterPollen, shooterNectar; // TODO: work on shooter, servo blockers
     private Mode mode = Mode.IDLE;
     private long shootStartTime = 0L;
     
     public Scorer(
             Roller intake, BeamBreak intakeSensor, FlowerRamp flowerRamp,
-            Roller transfer, Shooter shooterPollen, Shooter shooterNectar
+            Roller transfer, Shooter shooterPollen, Shooter shooterNectar, Blocker blockerPollen, Blocker blockerNectar
     ) {
         this.intake = intake;
         this.intakeSensor = intakeSensor;
@@ -26,6 +28,8 @@ public class Scorer {
         this.transfer = transfer;
         this.shooterPollen = shooterPollen;
         this.shooterNectar = shooterNectar;
+        this.blockerNectar = blockerNectar;
+        this.blockerPollen = blockerPollen;
     }
     
     public Mode mode() {
@@ -50,12 +54,16 @@ public class Scorer {
             }
             case SHOOT: {
                 if (System.currentTimeMillis() - shootStartTime < SHOOT_MS) {
+                    blockerNectar.up();
+                    blockerPollen.up();
                     intake.on();
                     transfer.on();
                     // Shooter.on()
                 } else { // time is up -- go idle
                     Storage.balls = 0;
                     mode = Mode.IDLE;
+                    blockerNectar.down();
+                    blockerPollen.down();
                 }
                 break;
             }

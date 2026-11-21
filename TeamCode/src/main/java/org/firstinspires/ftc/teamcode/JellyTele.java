@@ -71,7 +71,7 @@ public class JellyTele extends BaseOpMode {
         telemetry.addData("\tLeft", "%.2f", controls.driveLeft());
         telemetry.addData("\tTurn", "%.2f", controls.driveTurn());
         
-        if (controls.defensive()) { // TODO: replace with Scorer.mode() == Scorer.Mode.SHOOT once it initializes
+        if (false) { // TODO: replace with Scorer.mode() == Scorer.Mode.SHOOT once it initializes
             ManualDrive.driveOrHold(follower, powers, 0, HOLD_START_VELOCITY);
         } else {
             follower.manual(powers);

@@ -16,7 +16,7 @@ public class FlowerRamp {
         up(); // TODO: make sure ts no move during transition
     }
 
-    private void ensureAngle(double desired){
+    private void ensurePosition(double desired){
         if (cachedAngle != desired) {
             cachedAngle = desired;
             servo.setPosition(cachedAngle);
@@ -24,11 +24,11 @@ public class FlowerRamp {
     }
     
     public void up() {
-        ensureAngle(UP_POS);
+        ensurePosition(UP_POS);
     }
     
     public void down() {
-        ensureAngle(DOWN_POS);
+        ensurePosition(DOWN_POS);
     }
     
     public void toggle() {
