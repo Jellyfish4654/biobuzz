@@ -1,24 +1,32 @@
 package org.firstinspires.ftc.teamcode.auto;
 
+import com.google.blocks.ftcrobotcontroller.runtime.obsolete.VuforiaSkyStoneAccess;
 import com.pedropathing.api.PoseFactory;
 import com.pedropathing.math.Pose;
 import com.pedropathing.ivy.Command;
 import com.pedropathing.ivy.Scheduler;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 import org.firstinspires.ftc.teamcode.framework.BaseOpMode;
+import org.firstinspires.ftc.teamcode.framework.scoring.Vision;
 
 public abstract class BaseAuto extends BaseOpMode {
     // TODO: figure out the cleanest way to do this
     protected abstract PoseFactory allianceBasedSetup();
     protected abstract Pose getStartPose();
     protected abstract Command fullRoutine();
+    protected abstract int[] getTags();
     private Command routine;
-    final PoseFactory poseFactory = allianceBasedSetup();
+    //vision is only here because we don't need it (as of now) in teleop
+    protected Vision vision;
+    protected final PoseFactory poseFactory = allianceBasedSetup();
     
     @Override
     public void init() {
         super.init();
-        
+
+        vision = new Vision(hardwareMap.get(Limelight3A.class,"limelight"));
+
         follower.setPose(getStartPose());
         follower.update();
         

@@ -23,7 +23,10 @@ public class FlowerRedAuto extends BaseAuto {
     protected Pose getStartPose() {
         return poseFactory.of(30, 133, 270);
     }
-
+    @Override
+    protected int[] getTags() {
+        return new int[]{30,31,32,33};
+    }
     Pose shooting = poseFactory.of(58, 126, 270);
 
     Path shootPath() {return Paths.line(getStartPose(), shooting);}

@@ -22,6 +22,7 @@ import com.bylazar.configurables.annotations.Configurable;
 public class GardenRedAuto extends BaseAuto{
     @Override
     protected PoseFactory allianceBasedSetup() {
+        Storage.alliance = Storage.Alliance.RED;
         return PoseFactory.degrees();
     }
 
@@ -30,7 +31,14 @@ public class GardenRedAuto extends BaseAuto{
         return poseFactory.of(59.0,9.0,90.0);
     }
 
+    @Override
+    protected int[] getTags() {
+        return new int[]{34,35,36,37};
+    }
+
     public static double TIME_TO_PARK = 26;
+
+    boolean shouldStop = false;
 
     Pose gardenPose = poseFactory.of(9,8.7,270);
     Pose gardenControlPose = poseFactory.of(10,15,260);
@@ -46,40 +54,39 @@ public class GardenRedAuto extends BaseAuto{
     @Override
     protected Command fullRoutine() {
         //CommandBuilder/.until could be used instead of waitUntil, but that's noah's prerogative -- this may be more readable.
-        return race(sequential(
+        return sequential(
             instant(scorer::shootStart),
             waitUntil(()-> scorer.mode()==Scorer.Mode.IDLE),
-            race(
-                    waitUntil(()-> Storage.balls == 4),
+            parallel(
                     follow(follower,toGarden()),
                     Groups.loop(instant(scorer::intakeSustain))
-            ),
+            ).until(()-> Storage.balls >= 4),
             follow(follower, toShootOne()),
-            //the true will be substituted for limelight seeing the apriltag cluster, indicating a tip
-            waitUntil(()->true || getRuntime() >= TIME_TO_PARK),
+            instant(()->vision.start(getTags())),
+            waitUntil(()->vision.tagsFound() || getRuntime() >= TIME_TO_PARK),
             conditional(
                     ()->getRuntime() >= TIME_TO_PARK,
-                    sequential(follow(follower, parkFromShoot()),instant(Scheduler::reset)),
+                    sequential(follow(follower, parkFromShoot()),instant(()->shouldStop=true)),
                     instant(scorer::shootStart)
             ),
+            instant(vision::pause),
             waitUntil(()-> scorer.mode()==Scorer.Mode.IDLE),
-            race(
-                waitUntil(()-> Storage.balls == 4),
+            parallel(
                 follow(follower,toFlower()),
                 instant(scorer.flowerRamp::toggle),
                 Groups.loop(instant(scorer::intakeSustain))
-            ),
+            ).until(()-> Storage.balls >= 4),
             follow(follower,toShootTwo()),
-            //same thing with this true
-            waitUntil(()->true || getRuntime() >= TIME_TO_PARK),
+            instant(()->vision.start(getTags())),
+            waitUntil(()-> vision.tagsFound() || getRuntime() >= TIME_TO_PARK),
             conditional(
                     ()->getRuntime() >= TIME_TO_PARK,
-                    sequential(follow(follower, parkFromShoot()),instant(Scheduler::reset)),
+                    sequential(follow(follower, parkFromShoot()),instant(()->shouldStop=true)),
                     instant(scorer::shootStart)
             ),
+            instant(vision::stop),
             waitUntil(()-> scorer.mode()==Scorer.Mode.IDLE),
             follow(follower,parkFromShoot())
-
-        ),Groups.loop(instant(scorer::update)));
+        ).until(()->shouldStop);
     }
 }

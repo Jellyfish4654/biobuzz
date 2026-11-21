@@ -1,16 +1,12 @@
 package org.firstinspires.ftc.teamcode.util;
 
 
-import android.content.res.Resources;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-
 import com.bylazar.telemetry.JoinedTelemetry;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.example.jellytest.OnBotTest;
 import com.example.jellytest.OnBotTestInfo;
 import com.example.jellytest.TestResults;
+import com.example.jellytest.TestScanner;
 import com.example.jellytest.TestSet;
 import com.example.jellytest.TestTelemetry;
 import com.example.jellytest.TestUITelemetry;
@@ -21,17 +17,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Utility;
 import dev.frozenmilk.sinister.Scanner;
 import dev.frozenmilk.sinister.targeting.SearchTarget;
 import dev.frozenmilk.sinister.targeting.TeamCodeSearch;
-import dev.frozenmilk.util.graph.Graph;
-import dev.frozenmilk.util.graph.rule.AdjacencyRule;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 @Utility(name = "JellyTest", description = "Run the JellyTest OnBot test suite")
 public class RunTests extends LinearOpMode {
@@ -41,7 +29,7 @@ public class RunTests extends LinearOpMode {
     //Tests with the String testSetName set will be assigned to a test set.
     //If this isn't set, don't worry! They'll be apart of a "general" set
     TestSet[] testSets = {
-
+        new TestSet("servoTests",true)
     };
 
 
