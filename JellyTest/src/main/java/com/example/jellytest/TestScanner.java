@@ -1,12 +1,6 @@
-package org.firstinspires.ftc.teamcode.util;
+package com.example.jellytest;
 
 import android.util.Log;
-
-import androidx.annotation.NonNull;
-
-import com.example.jellytest.OnBotTest;
-import com.example.jellytest.OnBotTestInfo;
-import com.pedropathing.tuning.autotune.TunerScanner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
