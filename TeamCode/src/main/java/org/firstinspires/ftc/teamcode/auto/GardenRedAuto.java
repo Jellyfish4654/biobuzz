@@ -57,7 +57,7 @@ public class GardenRedAuto extends BaseAuto{
         return sequential(
             instant(scorer::shootStart),
             waitUntil(()-> scorer.mode()==Scorer.Mode.IDLE),
-            parallel(
+            parallel( // TODO: i think this will never finish: waits for all including loop to finish
                     follow(follower,toGarden()),
                     Groups.loop(instant(scorer::intakeSustain))
             ).until(()-> Storage.balls >= 4),
@@ -71,9 +71,9 @@ public class GardenRedAuto extends BaseAuto{
             ),
             instant(vision::pause),
             waitUntil(()-> scorer.mode()==Scorer.Mode.IDLE),
-            parallel(
+            parallel( // TODO: same here
                 follow(follower,toFlower()),
-                instant(scorer.flowerRamp::toggle),
+                instant(scorer.flowerRamp::toggle), // TODO: switch this for on or off
                 Groups.loop(instant(scorer::intakeSustain))
             ).until(()-> Storage.balls >= 4),
             follow(follower,toShootTwo()),
