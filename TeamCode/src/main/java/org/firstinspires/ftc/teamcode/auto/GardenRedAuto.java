@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.auto;
 
 import com.pedropathing.api.Paths;
-import com.pedropathing.ivy.Scheduler;
 import com.pedropathing.ivy.groups.Groups;
 import com.pedropathing.paths.Path;
 import com.pedropathing.api.PoseFactory;
@@ -57,13 +56,13 @@ public class GardenRedAuto extends BaseAuto{
         return sequential(
             instant(scorer::shootStart),
             waitUntil(()-> scorer.mode()==Scorer.Mode.IDLE),
-            parallel( // TODO: i think this will never finish: waits for all including loop to finish
+            parallel(
                     follow(follower,toGarden()),
                     Groups.loop(instant(scorer::intakeSustain))
             ).until(()-> Storage.balls >= 4),
             follow(follower, toShootOne()),
-            instant(()->vision.start(getTags())),
-            waitUntil(()->vision.tagsFound() || getRuntime() >= TIME_TO_PARK),
+            instant(()->vision.start()),
+            waitUntil(()->vision.areTagsVisible(getTags()) || getRuntime() >= TIME_TO_PARK),
             conditional(
                     ()->getRuntime() >= TIME_TO_PARK,
                     sequential(follow(follower, parkFromShoot()),instant(()->shouldStop=true)),
@@ -71,14 +70,14 @@ public class GardenRedAuto extends BaseAuto{
             ),
             instant(vision::pause),
             waitUntil(()-> scorer.mode()==Scorer.Mode.IDLE),
-            parallel( // TODO: same here
+            parallel(
                 follow(follower,toFlower()),
-                instant(scorer.flowerRamp::toggle), // TODO: switch this for on or off
+                instant(scorer.flowerRamp::toggle), // TODO: switch this to on or off
                 Groups.loop(instant(scorer::intakeSustain))
             ).until(()-> Storage.balls >= 4),
             follow(follower,toShootTwo()),
-            instant(()->vision.start(getTags())),
-            waitUntil(()-> vision.tagsFound() || getRuntime() >= TIME_TO_PARK),
+            instant(()->vision.start()),
+            waitUntil(()-> vision.areTagsVisible(getTags()) || getRuntime() >= TIME_TO_PARK),
             conditional(
                     ()->getRuntime() >= TIME_TO_PARK,
                     sequential(follow(follower, parkFromShoot()),instant(()->shouldStop=true)),
