@@ -13,11 +13,15 @@ import com.pedropathing.math.Pose;
 import com.pedropathing.utils.Angle;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.framework.Storage;
+
 @Autonomous
 public class FlowerRedAuto extends BaseAuto {
-
     @Override
-    protected PoseFactory allianceBasedSetup() { return PoseFactory.degrees(); }
+    protected PoseFactory allianceBasedSetup() {
+        Storage.alliance = Storage.Alliance.RED;
+        return PoseFactory.degrees();
+    }
 
     @Override
     protected Pose getStartPose() {
