@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.auto;
 
-import com.google.blocks.ftcrobotcontroller.runtime.obsolete.VuforiaSkyStoneAccess;
 import com.pedropathing.api.PoseFactory;
 import com.pedropathing.math.Pose;
 import com.pedropathing.ivy.Command;
@@ -8,7 +7,7 @@ import com.pedropathing.ivy.Scheduler;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 import org.firstinspires.ftc.teamcode.framework.BaseOpMode;
-import org.firstinspires.ftc.teamcode.framework.scoring.Vision;
+import org.firstinspires.ftc.teamcode.framework.Vision;
 
 public abstract class BaseAuto extends BaseOpMode {
     // TODO: figure out the cleanest way to do this

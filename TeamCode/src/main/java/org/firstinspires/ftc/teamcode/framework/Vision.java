@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.framework.scoring;
+package org.firstinspires.ftc.teamcode.framework;
 
 import androidx.annotation.Nullable;
 

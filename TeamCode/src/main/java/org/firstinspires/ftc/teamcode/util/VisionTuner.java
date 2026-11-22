@@ -8,7 +8,7 @@ import com.bylazar.telemetry.JoinedTelemetry;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.configurables.annotations.Configurable;
 
-import org.firstinspires.ftc.teamcode.framework.scoring.Vision;
+import org.firstinspires.ftc.teamcode.framework.Vision;
 
 @Utility(name = "Vision Tuner", description = "Tests if Limelight \"limelight\" can detect AprilTags")
 @Configurable
