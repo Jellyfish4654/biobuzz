@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.framework.BaseOpMode;
 import org.firstinspires.ftc.teamcode.framework.Storage;
+import org.firstinspires.ftc.teamcode.framework.scoring.Scorer;
 
 @Configurable
 @TeleOp(name = "JellyTele")
@@ -24,30 +25,26 @@ public class JellyTele extends BaseOpMode {
     @Override
     public void loop() {
         controls.syncWithPanels();
-
-
-        /*if (controls.intake()) {
-            scorer.intakeSustain();
-        }
-
-        if (controls.eject()) {
-            scorer.ejectSustain();
-        }
-
-        if (controls.flowerPressed()) {
-            scorer.flowerRamp.toggle();
-        }
-
-        if (controls.shoot()) {
-            scorer.shootStart();
-        }*/
+        
+        
+//        if (controls.eject()) {
+//            scorer.ejectSustain();
+//        } else if (controls.shoot()) {
+//            scorer.shootStart();
+//        } else if (controls.intake()) {
+//            scorer.intakeSustain();
+//        }
+//
+//        if (controls.flowerPressed()) {
+//            scorer.flowerRamp.toggle();
+//        }
 
         updateManualDrive();
 
         super.loop();
     }
     
-    // ↓ -------------- ↓ -------------- ↓ DRIVETRAIN ↓ -------------- ↓ -------------- ↓
+    // ↓ -------------- ↓ -------------- ↓ MANUAL DRIVE ↓ -------------- ↓ -------------- ↓
     private boolean fieldCentric = false;
     private void updateManualDrive() {
         if (controls.driveModePressed()) {
@@ -71,7 +68,7 @@ public class JellyTele extends BaseOpMode {
         telemetry.addData("\tLeft", "%.2f", controls.driveLeft());
         telemetry.addData("\tTurn", "%.2f", controls.driveTurn());
         
-        if (false) { // TODO: replace with Scorer.mode() == Scorer.Mode.SHOOT once it initializes
+        if (/*scorer.mode() == Scorer.Mode.SHOOT ||*/ controls.driveHoldOverride()) {
             ManualDrive.driveOrHold(follower, powers, 0, HOLD_START_VELOCITY);
         } else {
             follower.manual(powers);

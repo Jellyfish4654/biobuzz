@@ -1,48 +1,76 @@
 package org.firstinspires.ftc.teamcode.framework.scoring;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.pedropathing.controllers.Controller;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+
 @Configurable
 public class Shooter {
+    public static double POLLEN_KV = 0, POLLEN_KP = 0;
+    public static double NECTAR_KV = 0, NECTAR_KP = 0;
+    
+    public static double POLLEN_HOOD_POS_MIN = 0, POLLEN_HOOD_POS_MAX = 1;
+    public static double NECTAR_HOOD_POS_MIN = 0, NECTAR_HOOD_POS_MAX = 1;
+    
+    private final Controller velocityController;
+    private final DoubleSupplier hoodPosMin, hoodPosMax;
+    
     private final DcMotorEx motor;
     private final Servo hood;
-    private double cachedPower; // TODO: velocity?
-    private double cachedAngle;
+    
+    private double cachedMotorPower = 0;
+    private double cachedHoodPos = 0;
     
     public Shooter(
-            DcMotorEx motor, DcMotorEx.Direction motorDirection,
-            Servo hood, Servo.Direction hoodDirection, double hoodMin, double hoodMax
+            DcMotorEx motor, DcMotorEx.Direction motorDirection, DoubleSupplier kV, Supplier<Double> kP,
+            Servo hood, Servo.Direction hoodDirection, DoubleSupplier hoodMinPos, DoubleSupplier hoodMaxPos,
+            DoubleSupplier voltage
     ) {
         this.motor = motor;
         this.motor.setDirection(motorDirection);
         this.motor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         
+        this.velocityController = Controller.sum(
+                Controller.proportionalFeedforward(() -> kV.getAsDouble() * (12.0 / voltage.getAsDouble())),
+                Controller.proportional(kP)
+        );
+        
         this.hood = hood;
         this.hood.setDirection(hoodDirection);
-        this.hood.scaleRange(hoodMin, hoodMax);
+        this.hoodPosMin = hoodMinPos;
+        this.hoodPosMax = hoodMaxPos;
     }
     
-    private void ensurePower(double desired) {
-        if (cachedPower != desired) {
-            cachedPower = desired;
-            motor.setPower(cachedPower);
+    private void ensureMotorPower(double desired) {
+        if (cachedMotorPower != desired) {
+            cachedMotorPower = desired;
+            motor.setPower(cachedMotorPower);
         }
     }
     
-    private void ensureAngle(double desired) {
-        if (cachedAngle != desired) {
-            cachedAngle = desired;
-            hood.setPosition(cachedAngle);
+    private void ensureHoodPos(double desired) {
+        if (desired >= hoodPosMin.getAsDouble() && desired <= hoodPosMax.getAsDouble() && cachedHoodPos != desired) {
+            cachedHoodPos = desired;
+            hood.setPosition(cachedHoodPos);
         }
+    }
+    
+    public void on(double distance) {
+        // Regression for velocity and hood angle thingy
+        double targetVel = 0; // temp
+        // Hood angle offset based on velocity error (and distance?)
+        ensureMotorPower(velocityController.calculate(targetVel, targetVel - motor.getVelocity()));
     }
     
     public void off() {
-        ensurePower(0);
+        ensureMotorPower(0);
     }
     
     public boolean isOn() {
-        return cachedPower != 0;
+        return cachedMotorPower != 0;
     }
 }

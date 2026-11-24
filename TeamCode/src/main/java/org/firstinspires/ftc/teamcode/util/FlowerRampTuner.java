@@ -6,18 +6,18 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Utility;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.framework.scoring.FlowerRamp;
+import org.firstinspires.ftc.teamcode.framework.scoring.ServoArm;
 
 @Utility(name = "Flower Ramp Tuner",description = "Tune angle for up and down positions of the flower ramp")
 public class FlowerRampTuner extends OpMode {
     private Servo servo;
-    private FlowerRamp flowerRamp;
+    private ServoArm flowerRamp;
     
     @Override
     public void init() {
         telemetry = new JoinedTelemetry(telemetry, PanelsTelemetry.INSTANCE.getFtcTelemetry());
         servo = hardwareMap.get(Servo.class, "flower_ramp");
-        flowerRamp = new FlowerRamp(servo);
+        flowerRamp = new ServoArm(servo, Servo.Direction.FORWARD, () -> ServoArm.FLOWER_POS_UP, () -> ServoArm.FLOWER_POS_DOWN);
     }
     
     @Override

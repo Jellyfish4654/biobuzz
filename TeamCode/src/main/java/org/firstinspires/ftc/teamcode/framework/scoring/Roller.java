@@ -7,18 +7,16 @@ import java.util.function.DoubleSupplier;
 
 @Configurable
 public class Roller {
-    public static double INTAKE_POWER = 1;
-    public static double TRANSFER_POWER = 1;
-    
+    public static double INTAKE_POWER = 1, TRANSFER_POWER = 1;
+    private final DoubleSupplier power;
     private final DcMotor motor;
-    private final DoubleSupplier powerSupplier;
     private double cachedPower = 0;
 
-    public Roller(DcMotor motor, DcMotor.Direction direction, DoubleSupplier powerSupplier) {
+    public Roller(DcMotor motor, DcMotor.Direction direction, DoubleSupplier power) {
         this.motor = motor;
         this.motor.setDirection(direction);
         this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.powerSupplier = powerSupplier;
+        this.power = power;
     }
 
     private void ensurePower(double desired) {
@@ -29,11 +27,11 @@ public class Roller {
     }
 
     public void on() {
-        ensurePower(powerSupplier.getAsDouble());
+        ensurePower(power.getAsDouble());
     }
     
     public void reverse() {
-        ensurePower(-powerSupplier.getAsDouble());
+        ensurePower(-power.getAsDouble());
     }
 
     public void off() {

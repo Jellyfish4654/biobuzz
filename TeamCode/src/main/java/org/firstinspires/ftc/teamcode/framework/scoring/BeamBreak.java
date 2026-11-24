@@ -13,8 +13,7 @@ public class BeamBreak {
     private long rawLastChangedTime;
     
     // ↓ debounced values for if the beam sensor is broken on this and previous update
-    private boolean debouncedBroken;
-    private boolean debouncedBrokenPrevUpdate;
+    private boolean debouncedBroken, debouncedBrokenPrevUpdate;
 
     public BeamBreak(DigitalChannel digitalInput) {
         this.digitalInput = digitalInput;

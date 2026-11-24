@@ -5,24 +5,32 @@ import com.bylazar.telemetry.PanelsTelemetry;
 import com.pedropathing.follower.Follower;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit;
 import org.firstinspires.ftc.teamcode.framework.scoring.BeamBreak;
-import org.firstinspires.ftc.teamcode.framework.scoring.Blocker;
-import org.firstinspires.ftc.teamcode.framework.scoring.FlowerRamp;
 import org.firstinspires.ftc.teamcode.framework.scoring.Roller;
+import org.firstinspires.ftc.teamcode.framework.scoring.ServoArm;
 import org.firstinspires.ftc.teamcode.framework.scoring.Scorer;
-import org.firstinspires.ftc.teamcode.framework.scoring.Shooter;
 import org.firstinspires.ftc.teamcode.framework.pedro.Constants;
+import org.firstinspires.ftc.teamcode.framework.scoring.Shooter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.DoubleSupplier;
 
 public abstract class BaseOpMode extends OpMode {
+    protected DoubleSupplier voltage, current;
+    protected ControlMap controls;
     protected Follower follower;
     protected Scorer scorer;
-    protected ControlMap controls;
     
     // TODO: make sure nothing moves during auto → teleop transition
     @Override
@@ -30,6 +38,9 @@ public abstract class BaseOpMode extends OpMode {
         for (LynxModule hub : hardwareMap.getAll(LynxModule.class)) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
+        LynxModule controlHub = hardwareMap.get(LynxModule.class, "Control Hub");
+        voltage = ()-> controlHub.getInputVoltage(VoltageUnit.VOLTS);
+        current = ()-> controlHub.getCurrent(CurrentUnit.AMPS);
         
         telemetry = new JoinedTelemetry(telemetry, PanelsTelemetry.INSTANCE.getFtcTelemetry());
         telemetry.setCaptionValueSeparator(": ");
@@ -41,20 +52,22 @@ public abstract class BaseOpMode extends OpMode {
         follower = Constants.createFollower(hardwareMap);
         
 //        scorer = new Scorer(
-//                new Roller(hardwareMap.get(DcMotor.class, "intake"), DcMotor.Direction.FORWARD, () -> Roller.INTAKE_POWER),
+//                new Roller(hardwareMap.get(DcMotor.class, "intake"), DcMotor.Direction.FORWARD, ()-> Roller.INTAKE_POWER),
 //                new BeamBreak(hardwareMap.get(DigitalChannel.class, "intake_sensor")),
-//                new FlowerRamp(hardwareMap.get(Servo.class, "flower_ramp")),
-//                new Roller(hardwareMap.get(DcMotor.class, "transfer"), DcMotor.Direction.FORWARD, () -> Roller.TRANSFER_POWER),
+//                new ServoArm(hardwareMap.get(Servo.class, "flower_ramp"), Servo.Direction.FORWARD, ()-> ServoArm.FLOWER_POS_UP, ()-> ServoArm.FLOWER_POS_DOWN),
+//                new Roller(hardwareMap.get(DcMotor.class, "transfer"), DcMotor.Direction.FORWARD, ()-> Roller.TRANSFER_POWER),
 //                new Shooter(
-//                        hardwareMap.get(DcMotorEx.class, "pollen_motor"), DcMotorEx.Direction.FORWARD,
-//                        hardwareMap.get(Servo.class, "pollen_hood"), Servo.Direction.FORWARD, 0, 1
+//                        hardwareMap.get(DcMotorEx.class, "pollen_motor"), DcMotorEx.Direction.FORWARD, ()-> Shooter.POLLEN_KV, ()-> Shooter.POLLEN_KP,
+//                        hardwareMap.get(Servo.class, "pollen_hood"), Servo.Direction.FORWARD, ()-> Shooter.POLLEN_HOOD_POS_MIN, ()-> Shooter.POLLEN_HOOD_POS_MAX,
+//                        voltage
 //                ),
 //                new Shooter(
-//                        hardwareMap.get(DcMotorEx.class, "nectar_motor"), DcMotorEx.Direction.FORWARD,
-//                        hardwareMap.get(Servo.class, "nectar_hood"), Servo.Direction.FORWARD, 0, 1
+//                        hardwareMap.get(DcMotorEx.class, "nectar_motor"), DcMotorEx.Direction.FORWARD, ()-> Shooter.NECTAR_KV, ()-> Shooter.NECTAR_KP,
+//                        hardwareMap.get(Servo.class, "nectar_hood"), Servo.Direction.FORWARD, ()-> Shooter.NECTAR_HOOD_POS_MIN, ()-> Shooter.NECTAR_HOOD_POS_MAX,
+//                        voltage
 //                ),
-//                new Blocker(hardwareMap.get(Servo.class,"pollen_blocker")),
-//                new Blocker(hardwareMap.get(Servo.class,"nectar_blocker"))
+//                new ServoArm(hardwareMap.get(Servo.class,"pollen_blocker"), Servo.Direction.FORWARD, ()-> ServoArm.POLLEN_POS_UP, ()-> ServoArm.POLLEN_POS_DOWN),
+//                new ServoArm(hardwareMap.get(Servo.class,"nectar_blocker"), Servo.Direction.FORWARD, ()-> ServoArm.NECTAR_POS_UP, ()-> ServoArm.NECTAR_POS_DOWN)
 //        );
     }
     
@@ -73,8 +86,8 @@ public abstract class BaseOpMode extends OpMode {
     @Override
     public void loop() { // runs after extended
         follower.update();
-        //scorer.update();
         Storage.poseBackup = follower.pose();
+        //scorer.update(follower.pose());
         
 //        telemetry.addLine("\n<b>Scorer:</b>");
 //        telemetry.addData("\tMode", scorer.mode());
@@ -98,7 +111,6 @@ public abstract class BaseOpMode extends OpMode {
                 telemetry.addData("\t\tPath Completion", "%.4f", follower.completion());
             }
         }
-
         
         utilityTelemetry();
     }
@@ -108,6 +120,9 @@ public abstract class BaseOpMode extends OpMode {
         follower.stop();
         follower.update();
         Storage.poseBackup = follower.pose();
+        
+//        scorer.emergencyStop();
+//        scorer.update(follower.pose());
     }
     
     private long prevLoopNanoTime = 0;
@@ -131,5 +146,7 @@ public abstract class BaseOpMode extends OpMode {
             alertedEndgame = true;
             controls.megaRumble();
         }
+        
+        telemetry.addData("\tCurrent", current.getAsDouble());
     }
 }

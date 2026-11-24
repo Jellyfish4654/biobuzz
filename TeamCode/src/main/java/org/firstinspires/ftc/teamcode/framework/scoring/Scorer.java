@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.framework.scoring;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.pedropathing.math.Pose;
 
 import org.firstinspires.ftc.teamcode.framework.Storage;
 
@@ -10,17 +11,17 @@ public class Scorer {
     
     private final Roller intake;
     private final BeamBreak intakeSensor;
-    public final FlowerRamp flowerRamp; // only directly accessed by OpModes
+    public final ServoArm flowerRamp; // only directly accessed by OpModes
     private final Roller transfer;
-    private final Blocker blockerNectar;
-    private final Blocker blockerPollen;
+    private final ServoArm blockerNectar;
+    private final ServoArm blockerPollen;
     private final Shooter shooterPollen, shooterNectar; // TODO: work on shooter, servo blockers
     private Mode mode = Mode.IDLE;
     private long shootStartTime = 0L;
     
     public Scorer(
-            Roller intake, BeamBreak intakeSensor, FlowerRamp flowerRamp,
-            Roller transfer, Shooter shooterPollen, Shooter shooterNectar, Blocker blockerPollen, Blocker blockerNectar
+            Roller intake, BeamBreak intakeSensor, ServoArm flowerRamp,
+            Roller transfer, Shooter shooterPollen, Shooter shooterNectar, ServoArm blockerPollen, ServoArm blockerNectar
     ) {
         this.intake = intake;
         this.intakeSensor = intakeSensor;
@@ -36,41 +37,52 @@ public class Scorer {
         return mode;
     }
     
-    public void update() {
+    public void update(Pose robotPose) {
         trackIntake();
         switch (mode) {
             case IDLE: {
                 intake.off();
                 transfer.off();
-                // Shooter.off();
+                blockerPollen.down();
+                blockerNectar.down();
+                shooterPollen.off();
+                shooterNectar.off();
                 break;
             }
             case INTAKE: {
                 intake.on();
                 transfer.on();
-                // Shooter.off()
+                blockerPollen.down();
+                blockerNectar.down();
+                shooterPollen.off();
+                shooterNectar.off();
+                
                 mode = Mode.IDLE; // transient
                 break;
             }
             case SHOOT: {
                 if (System.currentTimeMillis() - shootStartTime < SHOOT_MS) {
-                    blockerNectar.up();
-                    blockerPollen.up();
+                    double shootDist = shootDistance(robotPose);
                     intake.on();
                     transfer.on();
-                    // Shooter.on()
+                    blockerPollen.up();
+                    blockerNectar.up();
+                    shooterPollen.on(shootDist);
+                    shooterNectar.on(shootDist);
                 } else { // time is up -- go idle
                     Storage.balls = 0;
                     mode = Mode.IDLE;
-                    blockerNectar.down();
-                    blockerPollen.down();
                 }
                 break;
             }
             case EJECT: {
                 intake.reverse();
                 transfer.reverse();
-                // Shooter.off
+                blockerPollen.up();
+                blockerNectar.up();
+                shooterPollen.off();
+                shooterNectar.off();
+                
                 mode = Mode.IDLE; // transient
                 break;
             }
@@ -94,6 +106,26 @@ public class Scorer {
         if (mode != Mode.SHOOT) {
             mode = Mode.EJECT;
         }
+    }
+    
+    public void emergencyStop() {
+        Storage.balls = 0;
+        mode = Mode.IDLE;
+    }
+    
+    // horizontal distance to the AprilTag cluster on the nearest alliance-specific cell, when tipped up
+    private double shootDistance(Pose robotPose) {
+        double distAudience;
+        double distScoring;
+        if (Storage.alliance == Storage.Alliance.BLUE) {
+            distAudience = robotPose.distance(new Pose(57.7, 57.54));
+            distScoring = robotPose.distance(new Pose(57.7, 83.92));
+        } else { // defaults to red hive
+            distAudience = robotPose.distance(new Pose(84.09, 57.54));
+            distScoring = robotPose.distance(new Pose(84.09, 83.92));
+        }
+        
+        return Math.min(distAudience, distScoring);
     }
     
     private void trackIntake() {
