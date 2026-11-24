@@ -121,7 +121,7 @@ public abstract class BaseOpMode extends OpMode {
 //        scorer.update(follower.pose());
     }
     
-    private long prevLoopNanoTime = 0;
+    private long prevLoopNanoTime = 0L;
     private boolean alertedEndgame = false;
     protected void utilityTelemetry() {
         telemetry.addLine("\n<b>Utility:</b>");

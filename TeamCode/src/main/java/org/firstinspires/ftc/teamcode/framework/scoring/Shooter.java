@@ -10,6 +10,8 @@ import java.util.function.Supplier;
 
 @Configurable
 public class Shooter {
+    public static double READY_VELOCITY_THRESHOLD = 200; // TODO: tune
+    
     public static double POLLEN_KV = 0, POLLEN_KP = 0;
     public static double NECTAR_KV = 0, NECTAR_KP = 0;
     
@@ -59,15 +61,23 @@ public class Shooter {
         }
     }
     
+    private double calcTargetVelocity(double distance) {
+        return 0; // temp
+    }
+    
     public void on(double distance) {
         // Regression for velocity and hood angle thingy
-        double targetVel = 0; // temp
+        double targetVel = calcTargetVelocity(distance);
         // Hood angle offset based on velocity error (and distance?)
         ensureMotorPower(velocityController.calculate(targetVel, targetVel - motor.getVelocity()));
     }
     
     public void off() {
         ensureMotorPower(0);
+    }
+    
+    public boolean isReady(double distance) {
+        return isOn() && Math.abs(calcTargetVelocity(distance) - motor.getVelocity()) < READY_VELOCITY_THRESHOLD;
     }
     
     public boolean isOn() {

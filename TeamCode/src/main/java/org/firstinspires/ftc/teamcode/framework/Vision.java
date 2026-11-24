@@ -15,7 +15,7 @@ public class Vision {
     public static int TARGET_THRESHOLD = 3;
     public static int DEFAULT_PIPELINE = 0;
     public static int POLL_RATE_HZ = 100;
-    public static long MAX_STALE_MILLIS = 30;
+    public static long MAX_STALE_MILLIS = 400L;
     
     private final Limelight3A limelight;
     

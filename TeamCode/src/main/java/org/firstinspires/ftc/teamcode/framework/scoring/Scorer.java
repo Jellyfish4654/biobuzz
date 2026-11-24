@@ -7,7 +7,8 @@ import org.firstinspires.ftc.teamcode.framework.Storage;
 
 @Configurable
 public class Scorer {
-    public static long SHOOT_MS = 1000;
+    public static long SHOOT_MS = 1000L;
+    public static long PRESPIN_MAX_MS = 5000L;
     
     private final Roller intake;
     private final BeamBreak intakeSensor;
@@ -16,8 +17,9 @@ public class Scorer {
     private final ServoArm blockerNectar;
     private final ServoArm blockerPollen;
     private final Shooter shooterPollen, shooterNectar; // TODO: work on shooter, servo blockers
+    
     private Mode mode = Mode.IDLE;
-    private long shootStartTime = 0L;
+    private long modeSwitchTime = 0L;
     
     public Scorer(
             Roller intake, BeamBreak intakeSensor, ServoArm flowerRamp,
@@ -60,8 +62,26 @@ public class Scorer {
                 mode = Mode.IDLE; // transient
                 break;
             }
+            case PRESPIN: {
+                double shootDist = shootDistance(robotPose);
+                if (
+                        !(shooterPollen.isReady(shootDist) && shooterNectar.isReady(shootDist))
+                        && System.currentTimeMillis() - modeSwitchTime < PRESPIN_MAX_MS
+                ) {
+                    intake.off();
+                    transfer.off();
+                    blockerPollen.down();
+                    blockerNectar.down();
+                    shooterPollen.on(shootDist);
+                    shooterNectar.on(shootDist);
+                } else {
+                    mode = Mode.SHOOT;
+                    modeSwitchTime = System.currentTimeMillis();
+                }
+                break;
+            }
             case SHOOT: {
-                if (System.currentTimeMillis() - shootStartTime < SHOOT_MS) {
+                if (System.currentTimeMillis() - modeSwitchTime < SHOOT_MS) {
                     double shootDist = shootDistance(robotPose);
                     intake.on();
                     transfer.on();
@@ -97,8 +117,8 @@ public class Scorer {
     
     public void shootStart() {
         if (mode != Mode.SHOOT && Storage.balls > 0) {
-            mode = Mode.SHOOT;
-            shootStartTime = System.currentTimeMillis();
+            mode = Mode.PRESPIN;
+            modeSwitchTime = System.currentTimeMillis();
         }
     }
     
@@ -128,7 +148,7 @@ public class Scorer {
         return Math.min(distAudience, distScoring);
     }
     
-    private void trackIntake() {
+    private void trackIntake() { // TODO: use velocity of shooter motor to track shooting
         intakeSensor.update();
         if (intakeSensor.justUnbroke()) {
             if (mode == Mode.INTAKE || mode == Mode.SHOOT) {
@@ -142,6 +162,7 @@ public class Scorer {
     public enum Mode {
         IDLE,
         INTAKE,
+        PRESPIN,
         SHOOT,
         EJECT
     }
