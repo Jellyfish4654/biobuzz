@@ -5,25 +5,21 @@ import com.bylazar.telemetry.PanelsTelemetry;
 import com.pedropathing.follower.Follower;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit;
+
+import org.firstinspires.ftc.teamcode.framework.pedro.Constants;
 import org.firstinspires.ftc.teamcode.framework.scoring.BeamBreak;
 import org.firstinspires.ftc.teamcode.framework.scoring.Roller;
 import org.firstinspires.ftc.teamcode.framework.scoring.ServoArm;
 import org.firstinspires.ftc.teamcode.framework.scoring.Scorer;
-import org.firstinspires.ftc.teamcode.framework.pedro.Constants;
 import org.firstinspires.ftc.teamcode.framework.scoring.Shooter;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.DoubleSupplier;
 
 public abstract class BaseOpMode extends OpMode {
