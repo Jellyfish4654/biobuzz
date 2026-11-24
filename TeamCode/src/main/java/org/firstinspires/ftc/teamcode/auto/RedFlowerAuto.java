@@ -1,22 +1,24 @@
 package org.firstinspires.ftc.teamcode.auto;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.api.Paths;
 import com.pedropathing.paths.Path;
 import com.pedropathing.api.PoseFactory;
 import com.pedropathing.ivy.Command;
 
-import static com.pedropathing.ivy.commands.Commands.*;
 import static com.pedropathing.ivy.groups.Groups.*;
 import static com.pedropathing.ivy.pedro.PedroCommands.*;
 
 import com.pedropathing.math.Pose;
-import com.pedropathing.utils.Angle;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.framework.Storage;
 
-@Autonomous
-public class FlowerRedAuto extends BaseAuto {
+@Configurable
+@Autonomous(name = "Red Flower", group = "1", preselectTeleOp = "JellyTele")
+public class RedFlowerAuto extends BaseAuto {
+    public static double TIME_TO_PARK = 26;
+    
     @Override
     protected PoseFactory allianceBasedSetup() {
         Storage.alliance = Storage.Alliance.RED;
@@ -24,16 +26,14 @@ public class FlowerRedAuto extends BaseAuto {
     }
 
     @Override
-    protected Pose getStartPose() {
-        return poseFactory.of(30, 133, 270);
-    }
+    protected Pose startPose() { return poseFactory.of(30, 133, 270); }
+    
     @Override
-    protected int[] getTags() {
-        return new int[]{30,31,32,33};
-    }
+    protected int[] getTags() { return new int[] {30, 31, 32, 33}; }
+    
     Pose shooting = poseFactory.of(58, 126, 270);
 
-    Path shootPath() {return Paths.line(getStartPose(), shooting);}
+    Path shootPath() {return Paths.line(startPose(), shooting);}
 
     @Override
     protected Command fullRoutine() {

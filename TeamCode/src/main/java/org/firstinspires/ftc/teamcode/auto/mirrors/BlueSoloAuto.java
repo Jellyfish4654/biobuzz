@@ -1,15 +1,15 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.mirrors;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.api.PoseFactory;
-import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.auto.RedSoloAuto;
 import org.firstinspires.ftc.teamcode.framework.Storage;
-import com.bylazar.configurables.annotations.Configurable;
 
-@Autonomous
 @Configurable
-public class GardenBlueAuto extends GardenRedAuto{
+@Autonomous(name = "Blue Solo", group = "2", preselectTeleOp = "JellyTele")
+public class BlueSoloAuto extends RedSoloAuto {
     @Override
     protected PoseFactory allianceBasedSetup() {
         Storage.alliance = Storage.Alliance.BLUE;
@@ -17,7 +17,5 @@ public class GardenBlueAuto extends GardenRedAuto{
     }
 
     @Override
-    protected int[] getTags() {
-        return new int[]{42,43,44,45};
-    }
+    protected int[] getTags() { return new int[] {42, 43, 44, 45}; }
 }

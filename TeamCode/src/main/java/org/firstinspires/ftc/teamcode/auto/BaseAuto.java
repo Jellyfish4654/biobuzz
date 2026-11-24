@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.framework.Vision;
 public abstract class BaseAuto extends BaseOpMode {
     // TODO: figure out the cleanest way to do this
     protected abstract PoseFactory allianceBasedSetup();
-    protected abstract Pose getStartPose();
+    protected abstract Pose startPose();
     protected abstract Command fullRoutine();
     protected abstract int[] getTags();
     private Command routine;
@@ -26,7 +26,7 @@ public abstract class BaseAuto extends BaseOpMode {
 
         vision = new Vision(hardwareMap.get(Limelight3A.class,"limelight"));
 
-        follower.setPose(getStartPose());
+        follower.setPose(startPose());
         follower.update();
         
         Scheduler.reset();

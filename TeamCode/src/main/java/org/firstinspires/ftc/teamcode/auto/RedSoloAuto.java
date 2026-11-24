@@ -7,17 +7,23 @@ import static com.pedropathing.ivy.groups.Groups.parallel;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.api.Paths;
 import com.pedropathing.api.PoseFactory;
 import com.pedropathing.ivy.Command;
 import com.pedropathing.ivy.groups.Groups;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.framework.Storage;
 import org.firstinspires.ftc.teamcode.framework.scoring.Scorer;
 
-public class DoubleRedAuto extends BaseAuto {
+@Configurable
+@Autonomous(name = "Red Solo", group = "1", preselectTeleOp = "JellyTele")
+public class RedSoloAuto extends BaseAuto {
+    public static double TIME_TO_PARK = 26;
+    
     @Override
     protected PoseFactory allianceBasedSetup() {
         Storage.alliance = Storage.Alliance.RED;
@@ -26,12 +32,10 @@ public class DoubleRedAuto extends BaseAuto {
 
     @Override
     //same as GardenRedAuto position but we can adjust
-    protected Pose getStartPose() { return poseFactory.of(59.0,9.0,90.0); }
+    protected Pose startPose() { return poseFactory.of(59.0, 9.0, 90.0); }
 
     @Override
-    protected int[] getTags() { return new int[]{34,35,36,37}; }
-
-    public static double TIME_TO_PARK = 26;
+    protected int[] getTags() { return new int[] {34, 35, 36, 37}; } // TODO: two sets of tags?
 
     boolean shouldStop = false;
 
@@ -43,13 +47,13 @@ public class DoubleRedAuto extends BaseAuto {
     Pose hive2Pose = poseFactory.of(59,120,270);
     Pose parkPose = poseFactory.of(10,91,0);
 
-    Path toFlower1() {return Paths.line(getStartPose(),flower1Pose).linear(getStartPose(),flower1Pose);}
+    Path toFlower1() {return Paths.line(startPose(),flower1Pose).linear(startPose(),flower1Pose);}
     Path toShootOne() {return Paths.curve(flower1Pose,flower1ControlPose,hive2Pose).linear(flower1Pose,hive2Pose);}
     Path toFlower2() {return Paths.line(hive2Pose,flower2Pose).linear(hive2Pose,flower2Pose);}
     Path toShootTwo() {return Paths.line(flower2Pose,hive2Pose).linear(flower2Pose,hive2Pose);}
     Path toGarden() {return Paths.curve(hive2Pose,gardenControlPose,gardenPose).linear(hive2Pose,gardenPose);}
-    Path toShootThree() {return Paths.line(gardenPose,getStartPose()).linear(gardenPose,getStartPose());}
-    Path parkFromShoot() {return Paths.line(getStartPose(),parkPose).linear(getStartPose(),parkPose);}
+    Path toShootThree() {return Paths.line(gardenPose, startPose()).linear(gardenPose, startPose());}
+    Path parkFromShoot() {return Paths.line(startPose(),parkPose).linear(startPose(),parkPose);}
 
     @Override
     protected Command fullRoutine() {
