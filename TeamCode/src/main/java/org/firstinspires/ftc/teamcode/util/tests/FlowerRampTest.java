@@ -12,7 +12,7 @@ public class FlowerRampTest extends OnBotTest {
     public void run() {
         ServoArm b = new ServoArm(hardwareMap.get(Servo.class,"flower_ramp"), Servo.Direction.FORWARD, () -> ServoArm.FLOWER_POS_UP, () -> ServoArm.FLOWER_POS_DOWN);
 
-        while(!Thread.interrupted()){
+        while(!Thread.interrupted() && !done){
             b.toggle();
             try {
                 Thread.sleep(500);

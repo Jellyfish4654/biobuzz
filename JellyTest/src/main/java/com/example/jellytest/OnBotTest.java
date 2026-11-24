@@ -47,4 +47,25 @@ public abstract class OnBotTest implements Runnable {
 
     public void preRun(int runIndex){};
     public void postRun(int runIndex){};
+
+    public String getName(){
+        String name = this.getClass().getAnnotation(OnBotTestInfo.class).testName();
+        if(name.isEmpty()){
+            return this.getClass().getSimpleName();
+        }else{
+            return name;
+        }
+    }
+
+    public int getRepeats(){
+        return this.getClass().getAnnotation(OnBotTestInfo.class).repeats();
+    }
+
+    public boolean getManualPassFail(){
+        return this.getClass().getAnnotation(OnBotTestInfo.class).manualPassFail();
+    }
+
+    public String getTestSetName(){
+        return this.getClass().getAnnotation(OnBotTestInfo.class).testSetName();
+    }
 }

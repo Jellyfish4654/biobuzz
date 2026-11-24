@@ -13,7 +13,7 @@ public class BlockerTest extends OnBotTest {
         ServoArm b = new ServoArm(hardwareMap.get(Servo.class,"pollen_blocker"), Servo.Direction.FORWARD,  () -> ServoArm.POLLEN_POS_UP, () -> ServoArm.POLLEN_POS_DOWN);
         ServoArm a = new ServoArm(hardwareMap.get(Servo.class,"nectar_blocker"), Servo.Direction.FORWARD,  () -> ServoArm.NECTAR_POS_UP, () -> ServoArm.NECTAR_POS_DOWN);
 
-        while(!Thread.interrupted()){
+        while(!Thread.interrupted() && !done){
             b.toggle();
             a.toggle();
             try {

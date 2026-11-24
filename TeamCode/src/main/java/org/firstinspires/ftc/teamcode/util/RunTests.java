@@ -102,7 +102,7 @@ public class RunTests extends LinearOpMode {
                         choices[i] = "*"+testSets[i].name;
                     }
                     for(int i=0;i<generalTests.getSize();i++){
-                        choices[i+testSets.length] = onBotTestName(generalTests.getTest(i));
+                        choices[i+testSets.length] = generalTests.getTest(i).getName();
                     }
 
                     //handle btn presses
@@ -124,7 +124,7 @@ public class RunTests extends LinearOpMode {
                 }else{
                     choices = new String[testSetSelected.getSize()];
                     for(int i=0;i<testSetSelected.getSize();i++){
-                        choices[i] = onBotTestName(testSetSelected.getTest(i));
+                        choices[i] = testSetSelected.getTest(i).getName();
                     }
                     //handle btn presses
                     if(gamepad1.squareWasPressed()){
@@ -134,7 +134,7 @@ public class RunTests extends LinearOpMode {
                     }else if(gamepad1.crossWasPressed()){
                         //run set/test
                         OnBotTest desiredTest = testSetSelected.getTest(menuSelected);
-                        testSetSelected = new TestSet(onBotTestName(testSetSelected.getTest(menuSelected)),false);
+                        testSetSelected = new TestSet(testSetSelected.getTest(menuSelected).getName(),false);
                         testSetSelected.addTest(desiredTest);
                         menuSelected = 0;
                         state = State.RUNNING_TEST;
@@ -168,14 +168,14 @@ public class RunTests extends LinearOpMode {
                             final OnBotTest testToRun = test;
                             @Override
                             public void run() {
-                                int repeats = testToRun.getClass().getAnnotation(OnBotTestInfo.class).repeats();
+                                int repeats = testToRun.getRepeats();
                                 for(int i=0;i<repeats;i++){
                                     testToRun.preRun(i);
                                     testToRun.telemetry.repeatIndex += 1;
                                     testToRun.telemetry.setProgress(0);
                                     testToRun.run();
                                     testToRun.telemetry.setProgress(100);
-                                    results.addResult(testSetSelected.name,onBotTestName(testToRun),testToRun.passed);
+                                    results.addResult(testSetSelected.name,testToRun.getName(),testToRun.passed);
                                     testToRun.postRun(i);
                                     testToRun.isRunning = true;
                                     testToRun.done = false;
@@ -184,7 +184,7 @@ public class RunTests extends LinearOpMode {
                                 testToRun.done = true;
                                 testRunning = false;
                             }
-                        },"TestThread"+onBotTestName(test));
+                        },"TestThread"+test.getName());
                         if(testSetSelected.isAsync){
                             currentThreads[i].start();
                         }
@@ -206,11 +206,11 @@ public class RunTests extends LinearOpMode {
                 for(int i=0; i<testSetSelected.getSize();i++){
                     uiTelemetry.addBodyLine(String.format(
                             (i==menuSelected?"[[":"")+"Test %s <%s/%s> - |%s| - %s"+(i==menuSelected?"]]":""),
-                            onBotTestName(testSetSelected.getTest(i)),
+                            testSetSelected.getTest(i).getName(),
                             testSetSelected.getTest(i).telemetry.repeatIndex,
-                            testSetSelected.getTest(i).getClass().getAnnotation(OnBotTestInfo.class).repeats(),
+                            testSetSelected.getTest(i).getRepeats(),
                             progressBarGenerator(100,testSetSelected.getTest(i).telemetry.getProgress(),6),
-                            results.getTestResultString(testSetSelected.name, onBotTestName(testSetSelected.getTest(i)))
+                            results.getTestResultString(testSetSelected.name, testSetSelected.getTest(i).getName())
                     ));
 
                     //test thread can write to this while I'm reading
@@ -225,7 +225,7 @@ public class RunTests extends LinearOpMode {
                 }
 
 
-                if(testSetSelected.getTest(menuSelected).waitingForManualApproval){
+                if(testSetSelected.getTest(menuSelected).getManualPassFail()){
                     uiTelemetry.setFooterControls(
                             new String[]{"Dpad Up","Dpad Down","X/A","Triangle/Y"},
                             new String[]{"Up","Down","Pass Test","Fail Test"}
@@ -327,21 +327,13 @@ public class RunTests extends LinearOpMode {
         }
         return bar.toString();
     }
-    /**This method either gets the name of the test through it's annotation (if set) or class name*/
-    String onBotTestName(OnBotTest test){
-        String name = test.getClass().getAnnotation(OnBotTestInfo.class).testName();
-        if(name.isEmpty()){
-            return test.getClass().getSimpleName();
-        }else{
-            return name;
-        }
-    }
+
 
     /**Gets either a TestSet or makes a TestSet of one test depending which is selected in the *combined* list */
     TestSet getTestSetSelectedByIndex(int index){
         if(index>=testSets.length){
             OnBotTest test = generalTests.getTest(index-testSets.length);
-            TestSet ret = new TestSet(onBotTestName(test),false);
+            TestSet ret = new TestSet(test.getName(),false);
             ret.addTest(test);
             return ret;
         }else{
@@ -361,15 +353,12 @@ public class RunTests extends LinearOpMode {
 
                 onBotTests.add(currentTest);
 
-                OnBotTestInfo annotation = currentTest.getClass().getAnnotation(OnBotTestInfo.class);
-
 
                 //add to a testSet
                 boolean addedToSet = false;
-                assert annotation != null;
-                if (!annotation.testSetName().isEmpty()) {
+                if (!currentTest.getTestSetName().isEmpty()) {
                     for (TestSet set : testSets) {
-                        if (set.name.equals(annotation.testSetName())) {
+                        if (set.name.equals(currentTest.getTestSetName())) {
                             set.addTest(currentTest);
                             addedToSet = true;
                         }
