@@ -21,13 +21,15 @@ public class Storage {
         }
     }
     
+    
+    // Positions centered on the AprilTag clusters, when tipped up
     public static final Pose
             CELL_RED_AUDIENCE = new Pose(57.7, 57.54),
             CELL_RED_SCORING = new Pose(57.7, 83.92),
             CELL_BLUE_AUDIENCE = new Pose(84.09, 57.54),
             CELL_BLUE_SCORING = new Pose(84.09, 83.92);
     
-    // Position the AprilTag cluster, when tipped up, on the nearest alliance-specific cell, defaulting to red
+    // Picks the nearest alliance-specific cell, defaulting to red
     public static Pose targetCell(Pose robotPose) {
         Pose audience;
         Pose scoring;
