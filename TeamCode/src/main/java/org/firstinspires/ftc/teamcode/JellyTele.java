@@ -3,10 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.drivetrain.DrivePowers;
 import com.pedropathing.follower.ManualDrive;
+import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.framework.BaseOpMode;
 import org.firstinspires.ftc.teamcode.framework.Storage;
+import org.firstinspires.ftc.teamcode.framework.pedro.Constants;
 import org.firstinspires.ftc.teamcode.framework.scoring.Scorer;
 
 @Configurable
@@ -68,7 +70,17 @@ public class JellyTele extends BaseOpMode {
         telemetry.addData("\tLeft", "%.2f", controls.driveLeft());
         telemetry.addData("\tTurn", "%.2f", controls.driveTurn());
         
-        if (/*scorer.mode() == Scorer.Mode.SHOOT ||*/ controls.driveHoldOverride()) {
+        // aim assistance TODO: tune and test this too
+        if (/*scorer.mode() == Scorer.Mode.PRESPIN || scorer.mode() == Scorer.Mode.SHOOT*/ false) {
+            Pose robotPose = follower.pose();
+            double distX = Storage.targetCell(robotPose).x() - robotPose.x();
+            double distY = Storage.targetCell(robotPose).y() - robotPose.y();
+            double targetHeading = Math.atan2(distY, distX);
+            
+            powers = ManualDrive.headingLock(follower, Constants.foresightConfig.headingFeedback.get(), powers, targetHeading); // TODO: needs derivative?
+        }
+        
+        if (/*scorer.mode() == Scorer.Mode.PRESPIN || scorer.mode() == Scorer.Mode.SHOOT ||*/ controls.driveHoldOverride()) {
             ManualDrive.driveOrHold(follower, powers, 0, HOLD_START_VELOCITY);
         } else {
             follower.manual(powers);

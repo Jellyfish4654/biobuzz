@@ -63,7 +63,7 @@ public class Scorer {
                 break;
             }
             case PRESPIN: {
-                double shootDist = shootDistance(robotPose);
+                double shootDist = robotPose.distance(Storage.targetCell(robotPose));
                 if (
                         !(shooterPollen.isReady(shootDist) && shooterNectar.isReady(shootDist))
                         && System.currentTimeMillis() - modeSwitchTime < PRESPIN_MAX_MS
@@ -82,7 +82,7 @@ public class Scorer {
             }
             case SHOOT: {
                 if (System.currentTimeMillis() - modeSwitchTime < SHOOT_MS) {
-                    double shootDist = shootDistance(robotPose);
+                    double shootDist = robotPose.distance(Storage.targetCell(robotPose));
                     intake.on();
                     transfer.on();
                     blockerPollen.up();
@@ -131,21 +131,6 @@ public class Scorer {
     public void emergencyStop() {
         Storage.balls = 0;
         mode = Mode.IDLE;
-    }
-    
-    // horizontal distance to the AprilTag cluster on the nearest alliance-specific cell, when tipped up
-    private double shootDistance(Pose robotPose) {
-        double distAudience;
-        double distScoring;
-        if (Storage.alliance == Storage.Alliance.BLUE) {
-            distAudience = robotPose.distance(new Pose(57.7, 57.54));
-            distScoring = robotPose.distance(new Pose(57.7, 83.92));
-        } else { // defaults to red hive
-            distAudience = robotPose.distance(new Pose(84.09, 57.54));
-            distScoring = robotPose.distance(new Pose(84.09, 83.92));
-        }
-        
-        return Math.min(distAudience, distScoring);
     }
     
     private void trackIntake() { // TODO: use velocity of shooter motor to track shooting
