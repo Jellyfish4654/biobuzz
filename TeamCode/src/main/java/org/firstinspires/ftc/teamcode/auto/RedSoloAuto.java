@@ -53,7 +53,8 @@ public class RedSoloAuto extends BaseAuto {
     Path toShootTwo() {return Paths.line(flower2Pose,hive2Pose).linear(flower2Pose,hive2Pose);}
     Path toGarden() {return Paths.curve(hive2Pose,gardenControlPose,gardenPose).linear(hive2Pose,gardenPose);}
     Path toShootThree() {return Paths.line(gardenPose, startPose()).linear(gardenPose, startPose());}
-    Path parkFromShoot() {return Paths.line(startPose(),parkPose).linear(startPose(),parkPose);}
+    Path parkFromShoot1() {return Paths.line(startPose(),parkPose).linear(startPose(),parkPose);} //starting hive
+    Path parkFromShoot2() {return Paths.line(hive2Pose,parkPose).linear(hive2Pose,parkPose);} //other hive
 
     @Override
     protected Command fullRoutine() {
@@ -68,7 +69,7 @@ public class RedSoloAuto extends BaseAuto {
                 follow(follower, toShootOne()),
                 conditional(
                         ()->getRuntime() >= TIME_TO_PARK,
-                        sequential(follow(follower, parkFromShoot()),instant(()->shouldStop=true)),
+                        sequential(follow(follower, parkFromShoot2()),instant(()->shouldStop=true)),
                         instant(scorer::shootStart)
                 ),
                 waitUntil(()-> scorer.mode()==Scorer.Mode.IDLE),
@@ -80,7 +81,7 @@ public class RedSoloAuto extends BaseAuto {
                 follow(follower,toShootTwo()),
                 conditional(
                         ()->getRuntime() >= TIME_TO_PARK,
-                        sequential(follow(follower, parkFromShoot()),instant(()->shouldStop=true)),
+                        sequential(follow(follower, parkFromShoot2()),instant(()->shouldStop=true)),
                         instant(scorer::shootStart)
                 ),
                 waitUntil(()-> scorer.mode()==Scorer.Mode.IDLE),
@@ -90,7 +91,7 @@ public class RedSoloAuto extends BaseAuto {
                 ).until(()-> Storage.balls >= 4),
                 follow(follower, toShootThree()),
                 waitUntil(()-> scorer.mode()==Scorer.Mode.IDLE),
-                follow(follower,parkFromShoot())
+                follow(follower,parkFromShoot1())
         ).until(()->shouldStop);
     }
 }
