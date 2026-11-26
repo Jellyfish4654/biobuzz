@@ -1,4 +1,4 @@
-package com.example.jellytest;
+package com.jellyfishbbhs.jellytest;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;

@@ -1,4 +1,4 @@
-package com.example.jellytest;
+package com.jellyfishbbhs.jellytest;
 
 import androidx.annotation.NonNull;
 
