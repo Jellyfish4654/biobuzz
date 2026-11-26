@@ -3,6 +3,7 @@ repositories {
     google() // Needed for androidx
     maven { url 'https://repo.dairy.foundation/releases/' }
     maven { url 'https://mymaven.bylazar.com/releases/' }
+    maven {url 'https://repo.jellyfishbbhs.com/releases/'}
 }
 
 dependencies {
@@ -21,4 +22,7 @@ dependencies {
     implementation 'com.pedropathing.ivy:pedro:1.1.1'
     implementation 'com.bylazar:fullpanels:1.0.20'
     implementation 'dev.frozenmilk.sinister:Sloth:0.3.2'
+
+    implementation 'com.jellyfishbbhs:jellytest:0.0.1'
+    implementation 'com.jellyfishbbhs:jellytestplugin:0.0.1'
 }

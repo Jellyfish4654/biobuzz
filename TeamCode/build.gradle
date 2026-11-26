@@ -26,7 +26,6 @@ android {
 
 dependencies {
     implementation project(':FtcRobotController')
-    implementation project(':JellyTest')
 }
 
 buildscript {

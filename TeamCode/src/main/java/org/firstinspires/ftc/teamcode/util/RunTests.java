@@ -3,13 +3,14 @@ package org.firstinspires.ftc.teamcode.util;
 
 import com.bylazar.telemetry.JoinedTelemetry;
 import com.bylazar.telemetry.PanelsTelemetry;
-import com.example.jellytest.OnBotTest;
-import com.example.jellytest.OnBotTestInfo;
-import com.example.jellytest.TestResults;
-import com.example.jellytest.TestScanner;
-import com.example.jellytest.TestSet;
-import com.example.jellytest.TestTelemetry;
-import com.example.jellytest.TestUITelemetry;
+import com.jellyfishbbhs.jellytest.OnBotTest;
+import com.jellyfishbbhs.jellytest.TestResults;
+import com.jellyfishbbhs.jellytest.TestScanner;
+import com.jellyfishbbhs.jellytest.TestSet;
+import com.jellyfishbbhs.jellytest.TestTelemetry;
+import com.jellyfishbbhs.jellytest.TestUITelemetry;
+import com.jellyfishbbhs.jellytestplugin.JellyTestPluginManager;
+import com.jellyfishbbhs.jellytestplugin.PanelsJellyTest;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Utility;
 
@@ -19,6 +20,7 @@ import dev.frozenmilk.sinister.targeting.SearchTarget;
 import dev.frozenmilk.sinister.targeting.TeamCodeSearch;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Utility(name = "JellyTest", description = "Run the JellyTest OnBot test suite")
@@ -59,6 +61,8 @@ public class RunTests extends LinearOpMode {
     int currentTestIndex = 0;
     boolean testRunning = false;
 
+    JellyTestPluginManager testPluginManager = PanelsJellyTest.INSTANCE.getJellyTestPlugin();
+    boolean testSetChanged = true;
 
 
 
@@ -155,6 +159,7 @@ public class RunTests extends LinearOpMode {
                 uiTelemetry.clearAll();
 
                 if(stateChanged){
+                    testSetChanged = true;
                     stateChanged=false;
 
                     menuSelected = 0;
@@ -190,7 +195,17 @@ public class RunTests extends LinearOpMode {
                         }
                     }
                 }
+                //update with panels plugin
+                HashMap<Integer,Boolean> serverUpdates = testPluginManager.getServerUpdates();
+                for(int i : serverUpdates.keySet()){
+                    if(serverUpdates.get(i)){
+                        testSetSelected.getTest(i).passTest();
+                    }else{
+                        testSetSelected.getTest(i).failTest();
+                    }
 
+                }
+                serverUpdates.clear();
                 //collect telemetry for the tests
                 uiTelemetry.addHeaderLine("Set "+testSetSelected.name);
                 uiTelemetry.addHeaderLine(String.format(
@@ -224,8 +239,12 @@ public class RunTests extends LinearOpMode {
                     uiTelemetry.addBodyLine();
                 }
 
+                //update plugin telemetry
+                testPluginManager.updateClient(testSetSelected,results, testSetChanged);
+                testSetChanged = false;
 
-                if(testSetSelected.getTest(menuSelected).getManualPassFail()){
+
+                if(testSetSelected.getTest(menuSelected).getManualPassFail() && !testSetSelected.getTest(menuSelected).done ){
                     uiTelemetry.setFooterControls(
                             new String[]{"Dpad Up","Dpad Down","X/A","Triangle/Y"},
                             new String[]{"Up","Down","Pass Test","Fail Test"}

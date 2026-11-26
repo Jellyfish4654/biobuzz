@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.util.tests;
 
-import com.example.jellytest.OnBotTest;
-import com.example.jellytest.OnBotTestInfo;
+import com.jellyfishbbhs.jellytest.OnBotTest;
+import com.jellyfishbbhs.jellytest.OnBotTestInfo;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.framework.scoring.ServoArm;

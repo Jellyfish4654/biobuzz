@@ -3,10 +3,12 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
+        maven{
+            url = uri("https://repo.dairy.foundation/releases")
+        }
+
     }
 }
 
 include ':FtcRobotController'
-include ':JellyTest'
 include ':TeamCode'
-

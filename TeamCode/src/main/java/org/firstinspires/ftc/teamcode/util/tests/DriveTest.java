@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.util.tests;
 
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 
-import com.example.jellytest.OnBotTest;
-import com.example.jellytest.OnBotTestInfo;
+import com.jellyfishbbhs.jellytest.OnBotTest;
+import com.jellyfishbbhs.jellytest.OnBotTestInfo;
 import com.pedropathing.api.Paths;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.ivy.Command;
