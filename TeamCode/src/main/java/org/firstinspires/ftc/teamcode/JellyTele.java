@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.framework.scoring.Scorer;
 @TeleOp(name = "JellyTele")
 public class JellyTele extends BaseOpMode {
     public static double HOLD_START_VELOCITY = 0.2;
+    public static double AIM_ASSISTANCE_STRENGTH = 0.5;
     
     @Override
     public void init() {
@@ -70,14 +71,22 @@ public class JellyTele extends BaseOpMode {
         telemetry.addData("\tLeft", "%.2f", controls.driveLeft());
         telemetry.addData("\tTurn", "%.2f", controls.driveTurn());
         
-        // aim assistance TODO: tune and test this too
+        // aim assistance TODO: test this
         if (/*scorer.mode() == Scorer.Mode.PRESPIN || scorer.mode() == Scorer.Mode.SHOOT*/ false) {
             Pose robotPose = follower.pose();
             double distX = Storage.targetCell(robotPose).x() - robotPose.x();
             double distY = Storage.targetCell(robotPose).y() - robotPose.y();
             double targetHeading = Math.atan2(distY, distX);
             
-            powers = ManualDrive.headingLock(follower, Constants.foresightConfig.headingFeedback.get(), powers, targetHeading); // TODO: needs derivative?
+            powers = ManualDrive.headingLock( // TODO: use the unreleased simplification
+                    follower,
+                    Constants.foresightConfig.headingFeedback.get(),
+                    powers,
+                    targetHeading,
+                    Constants.foresightConfig.headingBrakeCoefficients.get().x(),
+                    Constants.foresightConfig.headingBrakeCoefficients.get().y(),
+                    AIM_ASSISTANCE_STRENGTH
+            );
         }
         
         if (/*scorer.mode() == Scorer.Mode.PRESPIN || scorer.mode() == Scorer.Mode.SHOOT ||*/ controls.driveHoldOverride()) {
